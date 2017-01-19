@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.s11web.dataPersistence.BarcodeGenerateDao">
+
+    <select id="getPreNumberByCondition" resultType="java.lang.String">
+         select currentNumber from BarcodeGenerateInfo
+         where cargoType = #{cargoType}
+         and sourceFC = #{source}
+         and destinationFC = #{destination}
+         for update
+    </select>
+
+    <insert id="saveGenerateInfo" parameterType="com.s11web.model.BarcodeGenerateInfo">
+        insert into BarcodeGenerateInfo(cargoType, sourceFC, destinationFC, currentNumber)
+        values(#{cargoType}, #{sourceFC}, #{destinationFC}, #{currentNumber})
+    </insert>
+
+    <update id="updatePreNumberByCondition" parameterType="com.s11web.model.BarcodeGenerateInfo">
+        update BarcodeGenerateInfo set currentNumber = #{currentNumber}
+        where cargoType = #{cargoType}
+        and sourceFC = #{sourceFC}
+        and destinationFC = #{destinationFC}
+    </update>
+
+    <insert id="saveGenerateRecord" parameterType="com.s11web.model.BarcodeGenerateRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into BarcodeGenerateRecord(userName, cargoType, sourceFC, destinationFC, number, startBarcode, endBarcode)
+        values(#{userName}, #{cargoType}, #{sourceFC}, #{destinationFC}, #{number}, #{startBarcode}, #{endBarcode})
+    </insert>
+
+</mapper>
