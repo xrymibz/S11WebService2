@@ -16,9 +16,9 @@
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
 
         <!-- 测试数据库连接配置信息 -->
-        <property name="url" value="jdbc:mysql://s11webservicetestdb.cxoq4s4mm3vk.rds.cn-north-1.amazonaws.com.cn:8192/ZHW?useUnicode=true&amp;characterEncoding=UTF-8"/>
-        <property name="username" value="s11webservice"/>
-        <property name="password" value="12345qwert"/>
+        <!--<property name="url" value="jdbc:mysql://s11webservicetestdb.cxoq4s4mm3vk.rds.cn-north-1.amazonaws.com.cn:8192/ZHW?useUnicode=true&amp;characterEncoding=UTF-8"/>-->
+        <!--<property name="username" value="s11webservice"/>-->
+        <!--<property name="password" value="12345qwert"/>-->
 
         <!-- Amazon RDS数据库配置信息 -->
         <!--<property name="url" value="jdbc:mysql://cntrans.cxoq4s4mm3vk.rds.cn-north-1.amazonaws.com.cn:8192/ZHW?useUnicode=true&amp;characterEncoding=UTF-8"></property>-->

@@ -1,5 +1,7 @@
 package com.s11web.controller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,11 +9,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 import com.s11web.model.*;
 import com.s11web.util.ZipUtil;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,14 +71,20 @@ public class InterfaceController {
 
             return new JsonResult<>(false, message);
         }
-        try {
-            scanContent = ZipUtil.unCompress(scanContent);
-        } catch (IOException e) {
-            message = "上传数据解析出错!";
-            log.error(message, e);
-
-            return new JsonResult<>(false, message);
-        }
+//        try {
+//            log.debug(scanContent);
+//            try(ByteArrayOutputStream out = new ByteArrayOutputStream();
+//                GZIPInputStream gzipInputStream = new GZIPInputStream(
+//                        new ByteArrayInputStream(scanContent.getBytes("ISO-8859-1")))) {
+//                IOUtils.copy(gzipInputStream, out);
+//            }
+//            scanContent = ZipUtil.unCompress(scanContent);
+//        } catch (IOException e) {
+//            message = "上传数据解析出错!";
+//            log.error(message, e);
+//
+//            return new JsonResult<>(false, message);
+//        }
 
         log.debug(scanContent);
         JSONObject scanContentJsonObject = JSONObject.fromObject(scanContent);

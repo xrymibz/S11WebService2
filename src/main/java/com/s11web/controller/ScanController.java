@@ -168,8 +168,8 @@ public class ScanController {
                 int laneId = (Integer) laneInfo[0];
                 String laneE = (String) laneInfo[1];
                 String laneName = (String) laneInfo[2];
-                String laneType = (String) laneInfo[3];
-                String item = "{'laneId':" + laneId + ",'laneE':'" + laneE + "','laneName':'" + laneName + "','laneType':'" + laneType + "'}";
+                String arcType = (String) laneInfo[3];
+                String item = "{'laneId':" + laneId + ",'laneE':'" + laneE + "','laneName':'" + laneName + "','arcType':'" + arcType + "'}";
                 //System.out.println(item);
                 JSONObject item2 = JSONObject.fromObject(item);
                 result.add(item2);
