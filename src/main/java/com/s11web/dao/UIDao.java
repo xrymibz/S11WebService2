@@ -491,8 +491,8 @@ public class UIDao {
             query.setParameter("toTime", toTime);
 
             List<Object[]> result = query.list();
-            log.info(String.format("%s %s %s %s %s %s", laneE, source, destination, cargoType, sortCode, fromTime, toTime));
-            log.info(result.size());
+            log.info(String.format("%s |%s |%s |%s |%s |%s |%s", laneE, source, destination, cargoType, sortCode, fromTime, toTime));
+//            log.info(result.get(0)[0]+" "+result.get(0)[1]+" "+result.get(0)[2]+" "+result.get(0)[3]);
 
             return formatData(result, 5);
         } catch (Exception e) {
@@ -515,13 +515,21 @@ public class UIDao {
     }
 
 
-    public List<Object[]> getLanesByCarrier(String carrierId) {
+    public List<Object[]> getLanesByCarrier(String carrierId,String isInjection) {
+
+        log.debug("isInjection  :"+isInjection);
         Session session = sessionFactory.getCurrentSession();
         String sql = "select laneId, laneE, laneName,laneType" +
                 " FROM lc_v2_now_lane " +
                 " where carrierId in (" +
-                "select id from lc_carrier where lc_carrier.carrierId = :carrierId) " +
-                " and isDeleted = 0";
+                "select id from lc_carrier where lc_carrier.carrierId = :carrierId) ";
+
+        if (isInjection.equals("Injection")){
+            sql+="and laneType='Injection'  and isDeleted = 0";
+        }else{
+            sql+=  " and isDeleted = 0";
+        }
+
         System.out.println(sql);
         Query query = session.createSQLQuery(sql);
         query.setParameter("carrierId", carrierId);

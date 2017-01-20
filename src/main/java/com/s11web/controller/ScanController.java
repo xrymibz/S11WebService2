@@ -134,15 +134,16 @@ public class ScanController {
             message = "获取异常记录成功!";
             log.debug(result.get(0));
             log.debug(message);
-
-            String compressData = ZipUtil.compress(JSONArray.fromObject(result).toString());
-
+            //数据压缩中文乱码。现在暂时先关掉
+          //  String compressData = ZipUtil.compress(JSONArray.fromObject(result).toString());
+            String compressData =JSONArray.fromObject(result).toString();
             return new JsonResult<>(true, message, compressData);
-        } catch (IOException e) {
-            message = "压缩数据出错!";
-            log.error(message, e);
 
-            return new JsonResult<>(true, message, null);
+//        catch (IOException e) {
+//            message = "压缩数据出错!";
+//            log.error(message, e);
+//
+//            return new JsonResult<>(true, message, null);
         } catch (Exception e) {
             message = "获取异常记录失败!";
             log.error(message, e);
@@ -159,9 +160,10 @@ public class ScanController {
         message = "start getting lanes by carrierId";
         System.out.println(message);
         String carrierId = request.getParameter("carrierId");
+        String isInjection = request.getParameter("isInjection");
         System.out.println(carrierId);
         if (carrierId != null) {
-            List<Object[]> lanesList = uiService.getLanesByCarrier(carrierId);
+            List<Object[]> lanesList = uiService.getLanesByCarrier(carrierId,isInjection);
             List<JSONObject> result = new ArrayList<JSONObject>();
 
             for (Object[] laneInfo : lanesList) {

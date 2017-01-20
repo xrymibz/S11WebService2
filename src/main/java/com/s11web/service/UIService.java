@@ -440,9 +440,19 @@ public class UIService {
         ZipUtil.ZipMultiFile(inputStreamList, fileNameList, os);
     }
 
-    public List<Object[]> getLanesByCarrier(String carrierId) {
+    public List<Object[]> getLanesByCarrier(String carrierId,String isInjection) {
 
-        return uiDao.getLanesByCarrier(carrierId);
+        log.debug("isInjection :"+isInjection);
+        if(isInjection==null) {
+            isInjection="no";
+        }else{
+            if(isInjection.equals("1"))
+                isInjection="Injection";
+            else
+                isInjection="no";
+        }
+
+        return uiDao.getLanesByCarrier(carrierId,isInjection);
     }
 
 }
