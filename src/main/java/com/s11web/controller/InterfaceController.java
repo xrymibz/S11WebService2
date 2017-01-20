@@ -194,6 +194,48 @@ public class InterfaceController {
 
         return downloadInfo;
     }
+    @ResponseBody
+    @RequestMapping(value = "/uploadExceptionInfo")
+    public JsonResult uploadExceptionInfo(MultipartHttpServletRequest request) {
 
+        String sign = request.getParameter("sign");
+        String uploadExceptionInfoMethod = "uploadExceptionInfo";
+        boolean flag;
+        String message;
+        String imgUrlListStr;
+
+        if (!md5Util.authentication(sign, uploadExceptionInfoMethod)) {
+            message = "Md5校验出错!\n";
+            log.debug(message);
+            return new JsonResult<>(false, message);
+        }
+
+        String exceptionContent = request.getParameter("scanContent");
+        List<MultipartFile> images = request.getFiles("images");
+
+        log.debug(images.size());
+
+        List<String> fileUrlList = interfaceService.storeFilesToS3(bucketName, images);
+        imgUrlListStr = StringUtils.join(fileUrlList, "\t");
+
+        JSONObject exceptionContentJsonObject = JSONObject.fromObject(exceptionContent);
+        if (!exceptionContentJsonObject.containsKey("exptInfo")) {
+            message = "上传信息中不包含异常信息!";
+            log.error(message);
+
+            return new JsonResult(false, message);
+        }
+        if (exceptionContentJsonObject.containsKey("taskInfo")) {
+            interfaceService.addS11TaskInfo(exceptionContentJsonObject.getJSONObject("taskInfo"));
+        }
+        JSONObject exceptionItemInfo = exceptionContentJsonObject.getJSONObject("exptInfo");
+        exceptionItemInfo.put("imgUrlListStr", imgUrlListStr.trim());
+        flag = interfaceService.addS11ExceptionItemInfo(exceptionItemInfo);
+
+        message = flag ? String.format("尝试上传%d张图片,成功上传%d张", images.size(), fileUrlList.size()) : "上传失败!";
+        log.debug(message);
+
+        return new JsonResult(flag, message);
+    }
 
 }

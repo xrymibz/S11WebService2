@@ -395,6 +395,7 @@ public class UIService {
                 strings[imgCol] = formatUrl.trim();
             }
         }
+        log.debug("formatImgUrl is finished");
         return inputData;
     }
 

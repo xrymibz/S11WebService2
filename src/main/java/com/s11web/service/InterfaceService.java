@@ -122,7 +122,7 @@ public class InterfaceService {
             s11ExceptionItem.setPictureUrl(exceptionItemJson.getString("imgUrlListStr"));
             interfaceDao.addS11ExceptionItem(s11ExceptionItem);
 
-            log.info("异常信息保存成功!");
+            log.info("异常信息保存成功!  :"+exceptionItemJson.getString("imgUrlListStr"));
             return true;
         } catch (ParseException e) {
             log.error(exceptionItemJson.getString("time"), e);
@@ -324,7 +324,7 @@ public class InterfaceService {
                 inputStream = file.getInputStream();
                 objectMetadata.setContentLength(file.getSize());
                 objectMetadata.setContentType(file.getContentType());
-
+//                log.debug(file.getSize()+"  "+file.getContentType());
                 s3.putObject(new PutObjectRequest(bucketName, key, inputStream, objectMetadata));
                 log.debug(String.format("S3 putObject success! key info: %s", key));
 

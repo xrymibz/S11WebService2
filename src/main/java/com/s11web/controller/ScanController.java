@@ -132,7 +132,7 @@ public class ScanController {
 
             List<String[]> result = uiService.getExceptionInfoByDay(inputJsonObject.toString());
             message = "获取异常记录成功!";
-            log.debug(result.get(0));
+//            log.debug(result.get(0));
             log.debug(message);
             //数据压缩中文乱码。现在暂时先关掉
           //  String compressData = ZipUtil.compress(JSONArray.fromObject(result).toString());

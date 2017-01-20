@@ -492,7 +492,8 @@ public class UIDao {
 
             List<Object[]> result = query.list();
             log.info(String.format("%s |%s |%s |%s |%s |%s |%s", laneE, source, destination, cargoType, sortCode, fromTime, toTime));
-//            log.info(result.get(0)[0]+" "+result.get(0)[1]+" "+result.get(0)[2]+" "+result.get(0)[3]);
+
+     //       log.info(result.get(0)[0]+" "+result.get(0)[1]+" "+result.get(0)[2]+" "+result.get(0)[3]);
 
             return formatData(result, 5);
         } catch (Exception e) {
@@ -510,7 +511,7 @@ public class UIDao {
                 s[i] = obj[i] == null ? "" : obj[i].toString();
             res.add(s);
         }
-
+        log.debug("formatData is finished");
         return res;
     }
 
