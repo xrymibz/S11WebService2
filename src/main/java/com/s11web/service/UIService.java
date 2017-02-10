@@ -456,4 +456,9 @@ public class UIService {
         return uiDao.getLanesByCarrier(carrierId,isInjection);
     }
 
+    public List<Object[]> getcartypeBycarier(String carrierId) {
+
+        return uiDao.getcartypeBycarier(carrierId);
+    }
+
 }

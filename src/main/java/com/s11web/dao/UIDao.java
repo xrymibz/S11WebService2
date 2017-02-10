@@ -540,4 +540,20 @@ public class UIDao {
         return res;
     }
 
+    public List<Object[]> getcartypeBycarier(String carrierId) {
+
+        Session session = sessionFactory.getCurrentSession();
+        String sql = "select id,cartype" +
+                " FROM zhw_cartype " ;
+
+
+
+        System.out.println(sql);
+        Query query = session.createSQLQuery(sql);
+
+        List<Object[]> res = query.list();
+        System.out.println(res);
+        return res;
+    }
+
 }
