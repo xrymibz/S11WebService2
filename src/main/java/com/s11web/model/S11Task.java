@@ -51,6 +51,12 @@ public class S11Task {
 	@Getter @Setter
 	private String carrierAbbr;
 
+	@Getter @Setter
+	private String carType;
+
+	@Getter @Setter
+	private String carNumber;
+
 	public int getId() {
 		return id;
 	}
@@ -137,5 +143,21 @@ public class S11Task {
 
 	public void setCarrierAbbr(String carrierAbbr) {
 		this.carrierAbbr = carrierAbbr;
+	}
+
+	public String getCarType() {
+		return carType;
+	}
+
+	public void setCarType(String carType) {
+		this.carType = carType;
+	}
+
+	public String getCarNumber() {
+		return carNumber;
+	}
+
+	public void setCarNumber(String carNumber) {
+		this.carNumber = carNumber;
 	}
 }
