@@ -97,8 +97,12 @@ public class InterfaceService {
         s11_task.setLaneName(s11TaskJson.getString("laneName"));
         s11_task.setCarrierAbbr(s11TaskJson.getString("carrierAbbr"));
         s11_task.setTaskId(s11TaskJson.getString("taskId"));
-        s11_task.setCarType(s11TaskJson.getString("carType"));
-        s11_task.setCarNumber(s11TaskJson.getString("carNumber"));
+        if(s11TaskJson.get("carType")!=null){
+            s11_task.setCarType(s11TaskJson.getString("carType"));
+        }
+        if(s11TaskJson.get("carNumber")!=null){
+            s11_task.setCarType(s11TaskJson.getString("carNumber"));
+        }
         if (s11TaskJson.getString("cargoType").equals("VReturn"))
             s11_task.setSortCode(s11TaskJson.getString("sortCode"));
         try {
