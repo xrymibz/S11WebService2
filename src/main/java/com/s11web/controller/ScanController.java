@@ -193,10 +193,10 @@ public class ScanController {
         boolean flag = false;
         message = "start getting cartype by carrierId";
         System.out.println(message);
-        String carrierId = request.getParameter("carrierId");
-        System.out.println(carrierId);
-        if (carrierId != null) {
-            List<Object[]> cartypeList = uiService.getcartypeBycarier(carrierId);
+        String carrierAbbr = request.getParameter("carrierAbbr");
+        System.out.println(carrierAbbr);
+        if (carrierAbbr != null) {
+            List<Object[]> cartypeList = uiService.getCarTypeBycarier(carrierAbbr);
             List<JSONObject> result = new ArrayList<JSONObject>();
 
             log.debug(cartypeList);
@@ -218,5 +218,37 @@ public class ScanController {
         }
     }
 
+
+    @RequestMapping(value = "/getcarnumberBycarier")
+    @ResponseBody
+    public JsonResult   getcarnumberBycarier(HttpServletRequest request) {
+        String message = null;
+        boolean flag = false;
+        message = "start getting cartype by carrierId";
+        System.out.println(message);
+        String carrierAbbr = request.getParameter("carrierAbbr");
+        System.out.println(carrierAbbr);
+        if (carrierAbbr != null) {
+            List<Object[]> cartypeList = uiService.getCarNumberBycarier(carrierAbbr);
+            List<JSONObject> result = new ArrayList<JSONObject>();
+
+            log.debug(cartypeList);
+            for (Object[] cartypeInfo : cartypeList) {
+                String carNumber = (String) cartypeInfo[1];
+
+                String item = "{'carNumber':'" + carNumber + "'}";
+                //System.out.println(item);
+                JSONObject item2 = JSONObject.fromObject(item);
+                result.add(item2);
+
+            }
+            message = "success getting lanes";
+            flag = true;
+            return new JsonResult<List<JSONObject>>(flag, message, result);
+        } else {
+            message = "the param is error";
+            return new JsonResult<Integer>(flag, message, 0);
+        }
+    }
 }
 

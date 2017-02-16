@@ -456,9 +456,14 @@ public class UIService {
         return uiDao.getLanesByCarrier(carrierId,isInjection);
     }
 
-    public List<Object[]> getcartypeBycarier(String carrierId) {
+    public List<Object[]> getCarTypeBycarier(String carrierAbbr) {
 
-        return uiDao.getcartypeBycarier(carrierId);
+        return uiDao.getCarTypeBycarier(carrierAbbr);
+    }
+
+    public List<Object[]> getCarNumberBycarier(String carrierAbbr) {
+
+        return uiDao.getCarNumberBycarier(carrierAbbr);
     }
 
 }
