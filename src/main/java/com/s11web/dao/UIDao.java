@@ -556,18 +556,21 @@ public class UIDao {
         return res;
     }
 
-    public List<Object[]> getCarNumberBycarier(String carrierAbbr) {
+    public List<Object[]> getCarNumberBycarier(String carrierAbbr,String carType) {
 
         Session session = sessionFactory.getCurrentSession();
         String sql = "select carrierAbbr,carNumber" +
                 " FROM S11_task  " +
                 "WHERE carrierAbbr = :carrierAbbr "+
-                "AND carNumber is not NULL ORDER BY creDate DESC limit 3";
+                "AND carType = :carType "+
+                "AND LENGTH(carNumber)>=8 AND LENGTH(carNumber)<=9 ORDER BY creDate DESC limit 3";
 
 
         log.debug(sql);
+        log.debug(carType);
         Query query = session.createSQLQuery(sql);
         query.setParameter("carrierAbbr", carrierAbbr);
+        query.setParameter("carType", carType);
         List<Object[]> res = query.list();
         System.out.println(res);
         return res;

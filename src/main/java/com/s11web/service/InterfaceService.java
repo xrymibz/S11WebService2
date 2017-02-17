@@ -101,7 +101,7 @@ public class InterfaceService {
             s11_task.setCarType(s11TaskJson.getString("carType"));
         }
         if(s11TaskJson.get("carNumber")!=null){
-            s11_task.setCarType(s11TaskJson.getString("carNumber"));
+            s11_task.setCarNumber(s11TaskJson.getString("carNumber"));
         }
         if (s11TaskJson.getString("cargoType").equals("VReturn"))
             s11_task.setSortCode(s11TaskJson.getString("sortCode"));

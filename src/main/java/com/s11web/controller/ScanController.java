@@ -225,11 +225,12 @@ public class ScanController {
         String message = null;
         boolean flag = false;
         message = "start getting cartype by carrierId";
-        System.out.println(message);
+        log.debug(message);
         String carrierAbbr = request.getParameter("carrierAbbr");
-        System.out.println(carrierAbbr);
+        String carType = request.getParameter("carType");
+        log.debug(carrierAbbr  + carType);
         if (carrierAbbr != null) {
-            List<Object[]> cartypeList = uiService.getCarNumberBycarier(carrierAbbr);
+            List<Object[]> cartypeList = uiService.getCarNumberBycarier(carrierAbbr,carType);
             List<JSONObject> result = new ArrayList<JSONObject>();
 
             log.debug(cartypeList);

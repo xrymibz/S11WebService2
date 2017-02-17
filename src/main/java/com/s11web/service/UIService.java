@@ -461,9 +461,9 @@ public class UIService {
         return uiDao.getCarTypeBycarier(carrierAbbr);
     }
 
-    public List<Object[]> getCarNumberBycarier(String carrierAbbr) {
+    public List<Object[]> getCarNumberBycarier(String carrierAbbr,String carType) {
 
-        return uiDao.getCarNumberBycarier(carrierAbbr);
+        return uiDao.getCarNumberBycarier(carrierAbbr,carType);
     }
 
 }
