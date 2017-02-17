@@ -528,7 +528,7 @@ public class UIDao {
         if (isInjection.equals("Injection")){
             sql+="and laneType='Injection'  and isDeleted = 0";
         }else{
-            sql+=  " and isDeleted = 0";
+            sql+=  "and laneType!='Injection' and isDeleted = 0";
         }
 
         System.out.println(sql);
