@@ -47,6 +47,7 @@
 								<option value="Transfer">Transfer</option>
 								<option value="MLPS">MLPS</option>
 								<option value="VReturn">VReturn</option>
+								<option value="Injection">Injection</option>
 							</select>
 						</div>
 					</div>
