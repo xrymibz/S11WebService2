@@ -220,7 +220,6 @@ public class UIDao {
     }
 
     /**
-     *
      * @return 得到任务的类型type和taskid号
      * @auther xietian
      */
@@ -235,7 +234,7 @@ public class UIDao {
 
             List<S11Task> s1 = query.list();
 
-            for(S11Task i : s1) {
+            for (S11Task i : s1) {
                 ArcAverageScanTime temp = new ArcAverageScanTime();
                 temp.setType(i.getCargoType());
                 temp.setTaskid(i.getTaskId());
@@ -244,7 +243,7 @@ public class UIDao {
             }
 
 
-  //          result = formatData(list, 3);
+            //          result = formatData(list, 3);
         } catch (Exception e) {
             log.error(e);
         }
@@ -253,7 +252,6 @@ public class UIDao {
     }
 
     /**
-     *
      * @return 得到同一个taskid号下面所有的数据的扫描时间
      * @auther xietian
      */
@@ -268,7 +266,7 @@ public class UIDao {
             query.setParameter("taskId", taskId);
             List<Date> s1 = query.list();
 
-            for(Date i : s1) {
+            for (Date i : s1) {
                 log.debug(i);
             }
 
@@ -283,7 +281,6 @@ public class UIDao {
     }
 
     /**
-     *
      * @return 存储数据表
      * @auther xietian
      */
@@ -293,9 +290,6 @@ public class UIDao {
         session.save(arcAverageScanTime);
         log.debug("ok");
     }
-
-
-
 
 
     public List<String[]> getExceptionTaskItem(String laneE,
@@ -493,7 +487,7 @@ public class UIDao {
             List<Object[]> result = query.list();
             log.info(String.format("%s |%s |%s |%s |%s |%s |%s", laneE, source, destination, cargoType, sortCode, fromTime, toTime));
 
-     //       log.info(result.get(0)[0]+" "+result.get(0)[1]+" "+result.get(0)[2]+" "+result.get(0)[3]);
+            //       log.info(result.get(0)[0]+" "+result.get(0)[1]+" "+result.get(0)[2]+" "+result.get(0)[3]);
 
             return formatData(result, 5);
         } catch (Exception e) {
@@ -516,19 +510,19 @@ public class UIDao {
     }
 
 
-    public List<Object[]> getLanesByCarrier(String carrierId,String isInjection) {
+    public List<Object[]> getLanesByCarrier(String carrierId, String isInjection) {
 
-        log.debug("isInjection  :"+isInjection);
+        log.debug("isInjection  :" + isInjection);
         Session session = sessionFactory.getCurrentSession();
         String sql = "select laneId, laneE, laneName,laneType" +
                 " FROM lc_v2_now_lane " +
                 " where carrierId in (" +
                 "select id from lc_carrier where lc_carrier.carrierId = :carrierId) ";
 
-        if (isInjection.equals("Injection")){
-            sql+="and laneType='Injection'  and isDeleted = 0";
-        }else{
-            sql+=  "and laneType!='Injection' and isDeleted = 0";
+        if (isInjection.equals("Injection")) {
+            sql += "and laneType='Injection'  and isDeleted = 0";
+        } else {
+            sql += "and laneType!='Injection' and isDeleted = 0";
         }
 
         System.out.println(sql);
@@ -540,12 +534,11 @@ public class UIDao {
         return res;
     }
 
-    public List<Object[]> getCarTypeBycarier(String carrierAbbr) {
+    public List<Object[]> getCarTypeBycarrier(String carrierAbbr) {
 
         Session session = sessionFactory.getCurrentSession();
         String sql = "select id,cartype" +
-                " FROM zhw_cartype " ;
-
+                " FROM zhw_cartype ";
 
 
         System.out.println(sql);
@@ -556,13 +549,13 @@ public class UIDao {
         return res;
     }
 
-    public List<Object[]> getCarNumberBycarier(String carrierAbbr,String carType) {
+    public List<Object[]> getCarNumberBycarrier(String carrierAbbr, String carType) {
 
         Session session = sessionFactory.getCurrentSession();
         String sql = "select carrierAbbr,carNumber" +
                 " FROM S11_task  " +
-                "WHERE carrierAbbr = :carrierAbbr "+
-                "AND carType = :carType "+
+                "WHERE carrierAbbr = :carrierAbbr " +
+                "AND carType = :carType " +
                 "AND LENGTH(carNumber)>=8 AND LENGTH(carNumber)<=9 ORDER BY creDate DESC limit 3";
 
 

@@ -33,8 +33,6 @@ import com.s11web.dao.UIDao;
 @Component("uiService")
 public class UIService {
 
-
-
     @Autowired
     private UIDao uiDao;
 
@@ -167,21 +165,9 @@ public class UIService {
             }
             }
 
-
-
-
-
-
-
-
-
    //         System.out.println("now : "+i);
   //          System.out.println("later:  " + myFmt1.format(new Date(i.getTime()+1000)));
-
-
-
-
-            return null;
+          return null;
         } catch (Exception e) {
             log.info("error when  getTaskId", e);
 
@@ -456,14 +442,14 @@ public class UIService {
         return uiDao.getLanesByCarrier(carrierId,isInjection);
     }
 
-    public List<Object[]> getCarTypeBycarier(String carrierAbbr) {
+    public List<Object[]> getCarTypeBycarrier(String carrierAbbr) {
 
-        return uiDao.getCarTypeBycarier(carrierAbbr);
+        return uiDao.getCarTypeBycarrier(carrierAbbr);
     }
 
-    public List<Object[]> getCarNumberBycarier(String carrierAbbr,String carType) {
+    public List<Object[]> getCarNumberBycarrier(String carrierAbbr,String carType) {
 
-        return uiDao.getCarNumberBycarier(carrierAbbr,carType);
+        return uiDao.getCarNumberBycarrier(carrierAbbr,carType);
     }
 
 }

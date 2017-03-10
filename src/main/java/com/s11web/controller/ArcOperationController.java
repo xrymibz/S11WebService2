@@ -17,16 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ArcOperationController {
 
     private static final Logger log = Logger.getLogger(UserController.class);
-
     @Autowired
     private ArcOperationDao arcOperationDao;
-
     @ResponseBody
     @RequestMapping(value = "/getTaskIdList")
     public void getTaskIdList(@RequestParam String userName) {
 
         String message = String.format("get userId trucks for userName : %s\n", userName);
-
         try {
             arcOperationDao.getTaskIdList();
         } catch (Exception e) {

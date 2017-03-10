@@ -135,8 +135,8 @@ public class ScanController {
 //            log.debug(result.get(0));
             log.debug(message);
             //数据压缩中文乱码。现在暂时先关掉
-          //  String compressData = ZipUtil.compress(JSONArray.fromObject(result).toString());
-            String compressData =JSONArray.fromObject(result).toString();
+            //  String compressData = ZipUtil.compress(JSONArray.fromObject(result).toString());
+            String compressData = JSONArray.fromObject(result).toString();
             return new JsonResult<>(true, message, compressData);
 
 //        catch (IOException e) {
@@ -163,7 +163,7 @@ public class ScanController {
         String isInjection = request.getParameter("isInjection");
         System.out.println(carrierId);
         if (carrierId != null) {
-            List<Object[]> lanesList = uiService.getLanesByCarrier(carrierId,isInjection);
+            List<Object[]> lanesList = uiService.getLanesByCarrier(carrierId, isInjection);
             List<JSONObject> result = new ArrayList<JSONObject>();
 
             for (Object[] laneInfo : lanesList) {
@@ -186,9 +186,9 @@ public class ScanController {
         }
     }
 
-    @RequestMapping(value = "/getcartypeBycarier")
+    @RequestMapping(value = "/getcartypeBycarrier")
     @ResponseBody
-    public JsonResult   getcartypeBycarier(HttpServletRequest request) {
+    public JsonResult getcartypeBycarier(HttpServletRequest request) {
         String message = null;
         boolean flag = false;
         message = "start getting cartype by carrierId";
@@ -196,12 +196,12 @@ public class ScanController {
         String carrierAbbr = request.getParameter("carrierAbbr");
         System.out.println(carrierAbbr);
         if (carrierAbbr != null) {
-            List<Object[]> cartypeList = uiService.getCarTypeBycarier(carrierAbbr);
+            List<Object[]> cartypeList = uiService.getCarTypeBycarrier(carrierAbbr);
             List<JSONObject> result = new ArrayList<JSONObject>();
 
             log.debug(cartypeList);
             for (Object[] cartypeInfo : cartypeList) {
-               String cartype = (String) cartypeInfo[1];
+                String cartype = (String) cartypeInfo[1];
 
                 String item = "{'cartype':'" + cartype + "'}";
                 //System.out.println(item);
@@ -219,18 +219,18 @@ public class ScanController {
     }
 
 
-    @RequestMapping(value = "/getcarnumberBycarier")
+    @RequestMapping(value = "/getcarnumberBycarrier")
     @ResponseBody
-    public JsonResult   getcarnumberBycarier(HttpServletRequest request) {
+    public JsonResult getcarnumberBycarier(HttpServletRequest request) {
         String message = null;
         boolean flag = false;
         message = "start getting cartype by carrierId";
         log.debug(message);
         String carrierAbbr = request.getParameter("carrierAbbr");
         String carType = request.getParameter("carType");
-        log.debug(carrierAbbr  + carType);
+        log.debug(carrierAbbr + carType);
         if (carrierAbbr != null) {
-            List<Object[]> cartypeList = uiService.getCarNumberBycarier(carrierAbbr,carType);
+            List<Object[]> cartypeList = uiService.getCarNumberBycarrier(carrierAbbr, carType);
             List<JSONObject> result = new ArrayList<JSONObject>();
 
             log.debug(cartypeList);

@@ -23,21 +23,21 @@ public class SecurityInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response, Object handler) throws Exception {
 
-//        String requestUri = request.getRequestURI();
-//        for (String url : excludedUrls) {
-//            if (requestUri.endsWith(url)) {
-//                return true;
-//            }
-//        }
+        String requestUri = request.getRequestURI();
+        for (String url : excludedUrls) {
+            if (requestUri.endsWith(url)) {
+                return true;
+            }
+        }
 //暂时屏蔽
         // intercept
- //       HttpSession session = request.getSession();
-        return true;
-//        if (session.getAttribute("user") == null) {
-//            throw new AuthorizationException();
-//        } else {
-//            return true;
-//        }
+        HttpSession session = request.getSession();
+//        return true;
+        if (session.getAttribute("user") == null) {
+            throw new AuthorizationException();
+        } else {
+            return true;
+        }
     }
 
     @Override

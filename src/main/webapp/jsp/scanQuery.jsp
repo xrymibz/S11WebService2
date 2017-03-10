@@ -121,7 +121,7 @@
 		var allCarriers;
 
 		if( '<%=session.getAttribute("tabAuth")%>' == '1' )
-			allCarriers = ['BFHY','BFLTA','CDJQ','GZLH','JJXD','JSYZ','SHAZX', 'SHSS', 'SZFLS', 'THWL', 'XKWL'];
+			allCarriers = ['BFHY','BFLTA','CDJQ','GZLH','JJXD','JSYZ','SHAZX', 'SHSS', 'SZFLS', 'THWL', 'XKWL','ZYKY'];
 		else
 			allCarriers = ['<%=session.getAttribute("carrier")%>'];
 
