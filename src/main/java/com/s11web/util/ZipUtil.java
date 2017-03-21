@@ -1,7 +1,9 @@
 package com.s11web.util;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.xpath.SourceTree;
 
 import java.io.*;
 import java.util.List;
@@ -36,6 +38,11 @@ public class ZipUtil {
             GZIPInputStream gzipInputStream = new GZIPInputStream(
                     new ByteArrayInputStream(str.getBytes("ISO-8859-1")))) {
             IOUtils.copy(gzipInputStream, out);
+
+            //从APP来的数据是UTF-8编码的，不能用GBK解码。
+//            byte[] b = out.toString().getBytes("GBK");
+//            String decoding = new String(b, "UTF-8"); //编码解码相同，正常显示
+//            return decoding;
             return out.toString();
         }
     }
