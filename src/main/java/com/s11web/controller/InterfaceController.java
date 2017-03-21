@@ -72,7 +72,7 @@ public class InterfaceController {
             return new JsonResult<>(false, message);
         }
         try {
-            log.debug(scanContent);
+//            log.debug(scanContent);
             try(ByteArrayOutputStream out = new ByteArrayOutputStream();
                 GZIPInputStream gzipInputStream = new GZIPInputStream(
                         new ByteArrayInputStream(scanContent.getBytes("ISO-8859-1")))) {

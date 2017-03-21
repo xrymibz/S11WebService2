@@ -223,33 +223,33 @@ public class UIDao {
      * @return 得到任务的类型type和taskid号
      * @auther xietian
      */
-    public List<ArcAverageScanTime> getTaskID() {
-        List<ArcAverageScanTime> result = new ArrayList<>();
-        try {
-
-            String sql = "from S11Task where creDate>='2017-01-14' and creDate<='2017-01-16'";
-
-
-            Query query = sessionFactory.getCurrentSession().createQuery(sql);
-
-            List<S11Task> s1 = query.list();
-
-            for (S11Task i : s1) {
-                ArcAverageScanTime temp = new ArcAverageScanTime();
-                temp.setType(i.getCargoType());
-                temp.setTaskid(i.getTaskId());
-                result.add(temp);
-                log.debug(temp.getTaskid());
-            }
-
-
-            //          result = formatData(list, 3);
-        } catch (Exception e) {
-            log.error(e);
-        }
-
-        return result;
-    }
+//    public List<ArcAverageScanTime> getTaskID() {
+//        List<ArcAverageScanTime> result = new ArrayList<>();
+//        try {
+//
+//            String sql = "from S11Task where creDate>='2017-01-14' and creDate<='2017-01-16'";
+//
+//
+//            Query query = sessionFactory.getCurrentSession().createQuery(sql);
+//
+//            List<S11Task> s1 = query.list();
+//
+//            for (S11Task i : s1) {
+//                ArcAverageScanTime temp = new ArcAverageScanTime();
+//                temp.setType(i.getCargoType());
+//                temp.setTaskid(i.getTaskId());
+//                result.add(temp);
+//                log.debug(temp.getTaskid());
+//            }
+//
+//
+//            //          result = formatData(list, 3);
+//        } catch (Exception e) {
+//            log.error(e);
+//        }
+//
+//        return result;
+//    }
 
     /**
      * @return 得到同一个taskid号下面所有的数据的扫描时间
@@ -549,21 +549,24 @@ public class UIDao {
         return res;
     }
 
-    public List<Object[]> getCarNumberBycarrier(String carrierAbbr, String carType) {
+    public List<Object[]> getCarNumberBycarrier(String carrierAbbr, String carType, String laneName) {
 
         Session session = sessionFactory.getCurrentSession();
         String sql = "select DISTINCT carrierAbbr,carNumber" +
                 " FROM S11_task  " +
                 "WHERE carrierAbbr = :carrierAbbr " +
+                "AND laneName = :laneName " +
                 "AND carType = :carType " +
                 "AND LENGTH(carNumber)>=8 AND LENGTH(carNumber)<=9 ORDER BY creDate DESC limit 3";
 
 
         log.debug(sql);
         log.debug(carType);
+        log.debug(laneName);
         Query query = session.createSQLQuery(sql);
         query.setParameter("carrierAbbr", carrierAbbr);
         query.setParameter("carType", carType);
+        query.setParameter("laneName", laneName.trim());
         List<Object[]> res = query.list();
         System.out.println(res);
         return res;

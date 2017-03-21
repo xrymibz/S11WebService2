@@ -29,14 +29,14 @@ public class UIController {
         return new ModelAndView("jsp/scanQuery");
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/scanAvegeArcTime")
-    public void scanAvegeArcTime() {
-        log.debug("kaishi");
-        uiService.getTaskId();
-        log.debug("jieshu");
-
-    }
+//    @ResponseBody
+//    @RequestMapping(value = "/scanAvegeArcTime")
+//    public void scanAvegeArcTime() {
+//        log.debug("kaishi");
+//        uiService.getTaskId();
+//        log.debug("jieshu");
+//
+//    }
 
     @ResponseBody
     @RequestMapping(value = "/exceptionQuery")

@@ -228,9 +228,10 @@ public class ScanController {
         log.debug(message);
         String carrierAbbr = request.getParameter("carrierAbbr");
         String carType = request.getParameter("carType");
-        log.debug(carrierAbbr + carType);
+        String laneName = request.getParameter("laneName");
+        log.debug(carrierAbbr + carType + laneName);
         if (carrierAbbr != null) {
-            List<Object[]> cartypeList = uiService.getCarNumberBycarrier(carrierAbbr, carType);
+            List<Object[]> cartypeList = uiService.getCarNumberBycarrier(carrierAbbr, carType,laneName);
             List<JSONObject> result = new ArrayList<JSONObject>();
 
             log.debug(cartypeList);

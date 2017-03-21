@@ -127,54 +127,54 @@ public class UIService {
      *
      * @return得到arc的平均扫描时间
      */
-    public List<String[]> getTaskId() {
-
-        try {
-
-            List<ArcAverageScanTime>   ArcAverageScanTimes =  uiDao.getTaskID();
-            SimpleDateFormat myFmt1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            SimpleDateFormat myFmt2=new SimpleDateFormat("yyyy-MM-dd");
-
-            for(ArcAverageScanTime demo1:ArcAverageScanTimes){
-
-                List<Date> dates =  uiDao.getScanDatetimeList(demo1.getTaskid());
-
-                if(dates.size()>0){
-
-
-                Date date = myFmt2.parse(myFmt2.format(dates.get(0)));
-       //         String    date = myFmt2.format(dates.get(0));
-                int scanNumber = dates.size();
-                long start = dates.get(0).getTime();
-                long end = dates.get(scanNumber-1).getTime();
-                double avgscantime = (end-start)/1000.00/scanNumber;
-                //avgscantime 保留两位小数
-                DecimalFormat df = new DecimalFormat("#.00");
-                String f_trans = df.format(avgscantime);
-                avgscantime = Double.parseDouble(f_trans);
-
-                demo1.setDate(date);
-                demo1.setScanNumber(scanNumber);
-                demo1.setAvgScanTime(avgscantime);
-
-                uiDao.addArcAverageScanTime(demo1);
-                System.out.println("date : "+ demo1.getDate() +"   type :  "+demo1.getType() +"   taskid  :"+demo1.getTaskid() +"   scanNumber : "+ demo1.getScanNumber() +"   avgscantime  :"+demo1.getAvgScanTime());
-
-                log.debug(avgscantime);
-
-            }
-            }
-
-   //         System.out.println("now : "+i);
-  //          System.out.println("later:  " + myFmt1.format(new Date(i.getTime()+1000)));
-          return null;
-        } catch (Exception e) {
-            log.info("error when  getTaskId", e);
-
-            return null;
-        }
-
-    }
+//    public List<String[]> getTaskId() {
+//
+//        try {
+//
+//            List<ArcAverageScanTime>   ArcAverageScanTimes =  uiDao.getTaskID();
+//            SimpleDateFormat myFmt1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//            SimpleDateFormat myFmt2=new SimpleDateFormat("yyyy-MM-dd");
+//
+//            for(ArcAverageScanTime demo1:ArcAverageScanTimes){
+//
+//                List<Date> dates =  uiDao.getScanDatetimeList(demo1.getTaskid());
+//
+//                if(dates.size()>0){
+//
+//
+//                Date date = myFmt2.parse(myFmt2.format(dates.get(0)));
+//       //         String    date = myFmt2.format(dates.get(0));
+//                int scanNumber = dates.size();
+//                long start = dates.get(0).getTime();
+//                long end = dates.get(scanNumber-1).getTime();
+//                double avgscantime = (end-start)/1000.00/scanNumber;
+//                //avgscantime 保留两位小数
+//                DecimalFormat df = new DecimalFormat("#.00");
+//                String f_trans = df.format(avgscantime);
+//                avgscantime = Double.parseDouble(f_trans);
+//
+//                demo1.setDate(date);
+//                demo1.setScanNumber(scanNumber);
+//                demo1.setAvgScanTime(avgscantime);
+//
+//                uiDao.addArcAverageScanTime(demo1);
+//                System.out.println("date : "+ demo1.getDate() +"   type :  "+demo1.getType() +"   taskid  :"+demo1.getTaskid() +"   scanNumber : "+ demo1.getScanNumber() +"   avgscantime  :"+demo1.getAvgScanTime());
+//
+//                log.debug(avgscantime);
+//
+//            }
+//            }
+//
+//   //         System.out.println("now : "+i);
+//  //          System.out.println("later:  " + myFmt1.format(new Date(i.getTime()+1000)));
+//          return null;
+//        } catch (Exception e) {
+//            log.info("error when  getTaskId", e);
+//
+//            return null;
+//        }
+//
+//    }
 
 
 
@@ -447,9 +447,9 @@ public class UIService {
         return uiDao.getCarTypeBycarrier(carrierAbbr);
     }
 
-    public List<Object[]> getCarNumberBycarrier(String carrierAbbr,String carType) {
+    public List<Object[]> getCarNumberBycarrier(String carrierAbbr,String carType, String laneName) {
 
-        return uiDao.getCarNumberBycarrier(carrierAbbr,carType);
+        return uiDao.getCarNumberBycarrier(carrierAbbr,carType, laneName);
     }
 
 }
