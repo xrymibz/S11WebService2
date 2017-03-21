@@ -552,7 +552,7 @@ public class UIDao {
     public List<Object[]> getCarNumberBycarrier(String carrierAbbr, String carType) {
 
         Session session = sessionFactory.getCurrentSession();
-        String sql = "select carrierAbbr,carNumber" +
+        String sql = "select DISTINCT carrierAbbr,carNumber" +
                 " FROM S11_task  " +
                 "WHERE carrierAbbr = :carrierAbbr " +
                 "AND carType = :carType " +

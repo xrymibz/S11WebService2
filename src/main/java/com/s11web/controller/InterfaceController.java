@@ -71,20 +71,20 @@ public class InterfaceController {
 
             return new JsonResult<>(false, message);
         }
-//        try {
-//            log.debug(scanContent);
-//            try(ByteArrayOutputStream out = new ByteArrayOutputStream();
-//                GZIPInputStream gzipInputStream = new GZIPInputStream(
-//                        new ByteArrayInputStream(scanContent.getBytes("ISO-8859-1")))) {
-//                IOUtils.copy(gzipInputStream, out);
-//            }
-//            scanContent = ZipUtil.unCompress(scanContent);
-//        } catch (IOException e) {
-//            message = "上传数据解析出错!";
-//            log.error(message, e);
-//
-//            return new JsonResult<>(false, message);
-//        }
+        try {
+            log.debug(scanContent);
+            try(ByteArrayOutputStream out = new ByteArrayOutputStream();
+                GZIPInputStream gzipInputStream = new GZIPInputStream(
+                        new ByteArrayInputStream(scanContent.getBytes("ISO-8859-1")))) {
+                IOUtils.copy(gzipInputStream, out);
+            }
+            scanContent = ZipUtil.unCompress(scanContent);
+        } catch (IOException e) {
+            message = "上传数据解析出错!";
+            log.error(message, e);
+
+            return new JsonResult<>(false, message);
+        }
 
         log.debug(scanContent);
         JSONObject scanContentJsonObject = JSONObject.fromObject(scanContent);

@@ -321,8 +321,8 @@ public class InterfaceService {
         ArrayList<String> successKeyList = new ArrayList<>();
 
         AmazonS3 s3 = new AmazonS3Client();
-        Region AP_NORTHEAST_1 = Region.getRegion(Regions.AP_NORTHEAST_1);
-        s3.setRegion(AP_NORTHEAST_1);
+        Region CN_NORTH_1 = Region.getRegion(Regions.CN_NORTH_1);
+        s3.setRegion(CN_NORTH_1);
 
         for (MultipartFile file : files) {
             try {
