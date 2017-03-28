@@ -141,30 +141,39 @@ public class InterfaceController {
         try {
             Date currentTime = dateFormat.parse(time);
 
-            List<Lane> LanesInArcList = this.interfaceService.getLaneInfoByArc(sourceFc, destinationFc, arcType);
-            HashMap<String, String> previousLaneInfo = this.interfaceService.getPreviousLaneInfo(laneE, LanesInArcList, sourceFc, currentTime);
-
-            // 判断是否有前序LaneE信息
-            if (previousLaneInfo.containsKey("LaneE")) {
-                // 判断是否有时间区间信息
-                if (previousLaneInfo.containsKey("rightTime") && previousLaneInfo.containsKey("leftTime")) {
-                    toBeScanedIdSet = this.interfaceService.getScanList(
-                            previousLaneInfo.get("LaneE"), sourceFc, destinationFc, arcType, previousLaneInfo.get("leftTime"), previousLaneInfo.get("rightTime"));
-                    log.debug(String.format("共获取%d条前序条码记录!", toBeScanedIdSet.size()));
-                }
-                // 对于没有获取到时间区间信息的LaneE, 只获取当前LaneE下已经上传的条码信息
+            if(arcType.equals("Injection")){
                 String rightTime = dateFormat.format(currentTime);
                 String leftTime = dateFormat.format((new Date(currentTime.getTime() - CheckDuplicationTimeInterval)));
                 scanedIdSet = this.interfaceService.getScanList(
                         laneE, sourceFc, destinationFc, arcType, leftTime, rightTime);
-     //           log.debug(String.format("共获取%d条重复条码记录!", scanedIdSet.size()));
-
-                for (String scanId : scanedIdSet) if (toBeScanedIdSet.contains(scanId)) toBeScanedIdSet.remove(scanId);
-                flag = true;
                 message = "获取条码清单成功!";
-            } else {
-                message = "未获取到前序LaneE信息!";
+            }else{
+                List<Lane> LanesInArcList = this.interfaceService.getLaneInfoByArc(sourceFc, destinationFc, arcType);
+                HashMap<String, String> previousLaneInfo = this.interfaceService.getPreviousLaneInfo(laneE, LanesInArcList, sourceFc, currentTime);
+
+                // 判断是否有前序LaneE信息
+                if (previousLaneInfo.containsKey("LaneE")) {
+                    // 判断是否有时间区间信息
+                    if (previousLaneInfo.containsKey("rightTime") && previousLaneInfo.containsKey("leftTime")) {
+                        toBeScanedIdSet = this.interfaceService.getScanList(
+                                previousLaneInfo.get("LaneE"), sourceFc, destinationFc, arcType, previousLaneInfo.get("leftTime"), previousLaneInfo.get("rightTime"));
+                        log.debug(String.format("共获取%d条前序条码记录!", toBeScanedIdSet.size()));
+                    }
+                    // 对于没有获取到时间区间信息的LaneE, 只获取当前LaneE下已经上传的条码信息
+                    String rightTime = dateFormat.format(currentTime);
+                    String leftTime = dateFormat.format((new Date(currentTime.getTime() - CheckDuplicationTimeInterval)));
+                    scanedIdSet = this.interfaceService.getScanList(
+                            laneE, sourceFc, destinationFc, arcType, leftTime, rightTime);
+                    //           log.debug(String.format("共获取%d条重复条码记录!", scanedIdSet.size()));
+
+                    for (String scanId : scanedIdSet) if (toBeScanedIdSet.contains(scanId)) toBeScanedIdSet.remove(scanId);
+                    flag = true;
+                    message = "获取条码清单成功!";
+                } else {
+                    message = "未获取到前序LaneE信息!";
+                }
             }
+
         } catch (ParseException e) {
             message = "获取清单过程出现时间解析错误!";
             log.error(e.getMessage());
