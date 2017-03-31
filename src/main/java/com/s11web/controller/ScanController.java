@@ -78,11 +78,11 @@ public class ScanController {
         String message;
         List<Object[]> result = null;
         log.debug("getScanHistory is running ");
-//        if (!md5Util.authentication(sign, getScanHistory)) {
-//            message = "Md5校验失败!";
-//            log.debug(message);
-//            return new JsonResult<>(false, message, null);
-//        }
+        if (!md5Util.authentication(sign, getScanHistory)) {
+            message = "Md5校验失败!";
+            log.debug(message);
+            return new JsonResult<>(false, message, null);
+        }
 
         try {
             int userId = Integer.parseInt(userIdStr);
@@ -188,12 +188,12 @@ public class ScanController {
 
     @RequestMapping(value = "/getcartypeBycarrier")
     @ResponseBody
-    public JsonResult getcartypeBycarier(HttpServletRequest request) {
+    public JsonResult getcartypeBycarier(@RequestParam String carrierAbbr) {
         String message = null;
         boolean flag = false;
         message = "start getting cartype by carrierId";
         System.out.println(message);
-        String carrierAbbr = request.getParameter("carrierAbbr");
+//        String carrierAbbr = request.getParameter("carrierAbbr");
         System.out.println(carrierAbbr);
         if (carrierAbbr != null) {
             List<Object[]> cartypeList = uiService.getCarTypeBycarrier(carrierAbbr);
@@ -221,14 +221,16 @@ public class ScanController {
 
     @RequestMapping(value = "/getcarnumberBycarrier")
     @ResponseBody
-    public JsonResult getcarnumberBycarier(HttpServletRequest request) {
+    public JsonResult getcarnumberBycarier(@RequestParam String carrierAbbr,
+                                            @RequestParam String carType,
+                                            @RequestParam String laneName) {
         String message = null;
         boolean flag = false;
         message = "start getting cartype by carrierId";
         log.debug(message);
-        String carrierAbbr = request.getParameter("carrierAbbr");
-        String carType = request.getParameter("carType");
-        String laneName = request.getParameter("laneName");
+//        String carrierAbbr = request.getParameter("carrierAbbr");
+//        String carType = request.getParameter("carType");
+//        String laneName = request.getParameter("laneName");
         log.debug(carrierAbbr + carType + laneName);
         if (carrierAbbr != null) {
             List<Object[]> cartypeList = uiService.getCarNumberBycarrier(carrierAbbr, carType,laneName);
