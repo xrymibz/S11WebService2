@@ -56,6 +56,7 @@ public class UserController {
             ModelAndView mav = new ModelAndView("jsp/login");
             mav.addObject("flag", false);
 
+            log.debug("登录失败");
             return mav;
         }
         log.debug(String.format("登陆成功!  登陆用户: %s", name));

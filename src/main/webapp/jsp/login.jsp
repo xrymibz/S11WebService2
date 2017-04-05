@@ -41,10 +41,10 @@
 					<img src="../resources/img/logo.png" alt="SmartAdmin">
 				</span>
 			</div>
-			<span id="login-header-space">
-				<span class="hidden-mobile">需要新帐户?</span>
-				<a href="register.html" class="btn btn-danger">创建帐户</a>
-			</span>
+			<%--<span id="login-header-space">--%>
+				<%--<span class="hidden-mobile">需要新帐户?</span>--%>
+				<%--<a href="register.html" class="btn btn-danger">创建帐户</a>--%>
+			<%--</span>--%>
 		</header>
 
 		<div role="main">

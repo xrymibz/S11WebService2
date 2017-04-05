@@ -159,4 +159,16 @@ public class UIController {
         return new ModelAndView("jsp/barcodeGenerate");
     }
 
+
+    @RequestMapping(value = "/loadingRate")
+    @ResponseBody
+    public ModelAndView loadingRate() {
+        return new ModelAndView("jsp/loadingRate");
+    }
+
+    @RequestMapping(value = "/loadingRateItem")
+    @ResponseBody
+    public ModelAndView loadingRateItem() {
+        return new ModelAndView("jsp/loadingRateItem");
+    }
 }
