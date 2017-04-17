@@ -10,6 +10,19 @@
 		<%@ include file='resources.jsp'%>
 	</head>
 
+	<style type="text/css">
+		td.details-control {
+			background: url('../resources/img/details_open.png') no-repeat center
+			center;
+			cursor: pointer;
+		}
+
+		tr.shown td.details-control {
+			background: url('../resources/img/details_close.png') no-repeat center
+			center;
+		}
+	</style>
+
 	<body>
 		<%@ include file='head.jsp'%>
 		<div class="panalclapse">
@@ -81,13 +94,64 @@
 	</body>
 
 	<script type="text/javascript" src="../custom/js/query.js"></script>
+
+	<script type="text/javascript">
+		var table;
+        $(document).ready(function() {
+            var date=new Date;
+            var year=date.getFullYear();
+            var month=date.getMonth()+1;
+            month =(month<10 ? "0"+month:month);
+            var mydate = (year.toString()+"-"+month.toString());
+            $("#startTime").val(mydate);
+            // Add event listener for opening and closing details
+            $('#tabTaskInfo tbody').on('click', 'td.details-control', function() {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+                if (row.child.isShown()) {
+                    // This row is already open - close it
+                    row.child.hide();
+                    tr.removeClass('shown');
+                } else {
+                    // Open this row
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+            });
+            $("#startTime").datetimepicker({
+                minView : "year", //选择日期后，不会再跳转去选择时分秒
+                format : "yyyy-mm", //选择日期后，文本框显示的日期格式
+                language : "zh-CN", //汉化
+                autoclose : true, //选择日期后自动关闭
+                startView:"year",
+                orientation : 'right'
+
+            });
+
+            $("#startTime")
+                .datetimepicker()
+                .on(
+                    'hide',
+                    function(e) {
+                        $("#startTime")
+                            .click(
+                                function(e) {
+                                    $("#startTime")
+                                        .datetimepicker(
+                                            'show');
+                                });
+                    });
+            $(".icon-remove").click(function(e) {
+                $(this).parent().prev().val("");
+            });
+        });
+	</script>
+
 	<script>
 		var basePath = '<%=basePath%>';
 
 		var carrierList = $("#carrierList");
 		var laneList = $("#laneList");
-		var arcList = $("#arcList");
-		var cargoList = $("#cargoList");
 		var fromDate = $("#fromDate");
 		var toDate = $("#toDate");
 		var btnQuery = $("#btnQuery");
@@ -113,6 +177,7 @@
 		var laneSelected = [];
 		var arcSelected = [];
 		var cargoSelected = [];
+        cargoSelected.push("Injection");
 
 		fromDate.datetimepicker(getPickerOpts());
 		fromDate.val(getBeforeDate(7));
@@ -184,65 +249,7 @@
 					}
 				});
 
-		arcList.multiselect(
-				{
-					includeSelectAllOption : true,
-					enableFiltering : true,
-					maxHeight : 150,
-					buttonWidth : '100%',
-					buttonText : function(options) {
-						if (options.length === 0) {
-							arcSelected = [];
-							return 'No arc selected  <b class="caret"></b>';
-						} else {
-							arcSelected = [];
-							var selected = '';
-							var count = 0;
-							options.each(function() {
-								count++;
-								selected += $(this).text() + ', ';
-								arcSelected.push(this.attributes[0].value);
-							});
-							if (count < 3) {
-								return selected.substr(0,selected.length - 2) + ' <b class="caret"></b>';
-							} else {
-								selected = "You had chose " + count
-										+ " arcs";
-								return selected + ' <b class="caret"></b>';
-							}
-						}
-					}
-				});
 
-		cargoList.multiselect(
-				{
-					includeSelectAllOption : true,
-					enableFiltering : true,
-					maxHeight : 150,
-					buttonWidth : '100%',
-					buttonText : function(options) {
-						if (options.length === 0) {
-							cargoSelected = [];
-							return 'No cargoType selected  <b class="caret"></b>';
-						} else {
-							cargoSelected = [];
-							var selected = '';
-							var count = 0;
-							options.each(function() {
-								count++;
-								selected += $(this).text() + ', ';
-								cargoSelected.push(this.attributes[0].value);
-							});
-							if (count < 3) {
-								return selected.substr(0,selected.length - 2) + ' <b class="caret"></b>';
-							} else {
-								selected = "You had chose " + count
-										+ " cargoType";
-								return selected + ' <b class="caret"></b>';
-							}
-						}
-					}
-				});
 
 		btnQuery.click(function(){
 			//如果datatable存在，则将其删除
@@ -267,14 +274,13 @@
 			formdata.carriers = carriers;
 			formdata.fromDate = fromDateVal;
 			formdata.toDate = toDateVal;
-			formdata.arcList = arcSelected;
 			formdata.cargoTypeList = cargoSelected;
 
 
 			formData = $.toJSON(formdata);
             console.log("formdata : " + formdata);
 
-			showTaskInfo( getCountByCondition(basePath, formData) );
+			showTaskInfo( getLoadingRateByConditions(basePath, formData) );
 		});
 
 		btnDownload.click(function(){
@@ -303,11 +309,10 @@
 		function showTaskInfo(data){
 			$("#tabTaskInfo thead").html(
 					"<tr>\n"+
-					"<th style='text-align:center;display:none'>TaskId</th>\n"+
+					"<th style='text-align:center'>  </th>\n"+
                     "<th style='text-align:center'>运输商</th>\n"+
 					"<th style='text-align:center'>LaneE</th>\n"+
 					"<th style='text-align:center'>发货日期</th>\n"+
-					"<th style='text-align:center'>SortCode</th>\n"+
 					"<th style='text-align:center'>总计</th>\n"+
                     "<th style='text-align:center'>总体积</th>\n"+
                     "<th style='text-align:center'>总重量</th>\n"+
@@ -323,18 +328,17 @@
 			for(var i = 0; i <  data.length; i++){
 				htmlStr = htmlStr +
 						"<tr>"+
-						"<td style='display:none' class='taskId'>" + data[i][0] +"</td>" +
-                        "<td class='carrier'>"+  '上海展欣' +"</td>" +
-						"<td class='laneE'>"+  data[i][0] +"</td>" +
-						"<td class='cargoType'>"+  data[i][5] +"</td>" +
-						"<td class='sortCode'>"+  data[i][3] +"</td>" +
-						"<td><a href='javascript:void(0)' class='count'>"+  data[i][4] +"</a></td>"+
-                        "<td class='totalCapacity'>"+  15 +"</td>" +
-                        "<td class='totalWeight'>"+  300 +"</td>" +
-                        "<td class='models'>"+  '金杯' +"</td>" +
-                        "<td class='LicensePlate'>"+  '京E15324' +"</td>" +
-                        "<td class='cube'>"+  20 +"</td>" +
-						"<td class='loadRate'>"+  '75%' +"</td></tr>";
+						"<td class='Id'>" + data[i][0] +"</td>" +
+                        "<td class='carrier'>"+  data[i][0] +"</td>" +
+						"<td class='laneE'>"+  data[i][1] +"</td>" +
+						"<td class='credate'>"+  data[i][2] +"</td>" +
+						"<td><a href='javascript:void(0)' class='count'>"+  data[i][3] +"</a></td>"+
+                        "<td class='totalCapacity'>"+  data[i][4] +"</td>" +
+                        "<td class='totalWeight'>"+  data[i][5] +"</td>" +
+                        "<td class='carModels'>"+  data[i][6] +"</td>" +
+                        "<td class='LicensePlate'>"+ data[i][7] +"</td>" +
+                        "<td class='cube'>"+  data[i][8] +"</td>" +
+						"<td class='loadRate'>"+  data[i][9] +"</td></tr>";
 				total += parseInt(data[i][4]);
 			}
 
@@ -342,7 +346,7 @@
 
 			tabTaskInfo.find('tbody').append(htmlStr);
 
-			tabTaskInfo.dataTable({
+		table =	tabTaskInfo.DataTable({
 				"bPaginate": true,
 //				"bLengthChange": false,
 				"iDisplayLength": 20,
@@ -365,6 +369,33 @@
 						"sLast": " 最后一页"
 					}
 				},
+                "columns" : [
+					{
+                    "class" : 'details-control',
+                    "orderable" : false,
+                    "data" : null,
+                    "defaultContent" : ''
+                }, {
+                    "data" : "carrier"
+                }, {
+                    "data" : "laneE"
+                }, {
+                    "data" : "credate"
+                }, {
+				    "data" : "count"
+                    }, {
+                        "data" : "totalCapacity"
+                    }, {
+                        "data" : "totalWeight"
+                    }, {
+                        "data" : "carModels"
+                    }, {
+                        "data" : "LicensePlate"
+                    }, {
+                        "data" : "cube"
+                    }, {
+                        "data" : "loadRate"
+					}]
 			});
 		}
 
@@ -375,11 +406,96 @@
 			 carrierList.multiselect('disable');
 		}
 		$(".loadingRate").css("color", "white");
+    </script>
 
 
 
+	<script type="text/javascript">
+
+        var sOut = "";
+
+        function format(d) {
+                var formdata = new Object();
+                   formdata.carrier = d.carrier;
+                    formdata.laneE = d.laneE;
+			        formdata.credate=d.credate;
+			console.log(formdata);
+            var basePath = '<%=basePath%>';
+            var mydata = $.toJSON(formdata);
+            var data = getLoadingRateOfChildren(basePath,mydata);
+//            $.ajax({
+//                    type : "POST",
+//                    url : basePath+getLoadingRateOfChildren,
+//                    data : "data=" + data,
+//                    dataType : "json",
+//                    async : false,
+//                    success : function(result) {
+//                        //var res = eval("("+result+")");
+//                        var res = eval(result);
+//                        sOut = '<table class="table table-striped table-hover table-bordered" style="padding-left:50px;"><thead>';
+//                        sOut += '<tr><th>编号</th><th>品项名称</th><th>收入数量</th><th>收入费用</th></tr></thead><tbody>';
+//
+//                        $.each(res.materialreportlist, function(i, item) {
+//                            sOut += '<tr>';
+//                            sOut += '<td width="5%">' + (i + 1)
+//                                + '</td><td width="45%">' + item[0]
+//                                + '</td><td width="25%">' + item[1]
+//                                + '</td>';
+//                            sOut += '<td width="25%">' + item[2] + '</td>';
+//                            sOut += '</tr>';
+//                        });
+//                        sOut += '</tbody></table>';
+//                    },
+//                    error : function() {//请求出错处理
+//                        //oTable.fnOpen( nTr,'加载数据超时~', 'details' );
+//                        alert("加载数据超时~");
+//                    }
+//                });
+
+            sOut = '<table class="table table-striped table-hover table-bordered" style="padding-left:50px;"><thead>';
+            sOut += '<tr><th>发货时间</th><th>总计</th><th>总体积</th><th>总重量</th><th>车型</th><th>车牌</th><th>水方</th><th>装载率</th></tr></thead><tbody>';
+
+//            sOut += '<tr>';
+//            sOut += '<td>' + '2017-03-30'
+//                + '</td><td>' + 4
+//                + '</td><td>' + 12
+//                + '</td><td>' + 12
+//                + '</td><td>' + '金杯'
+//                + '</td><td>' + '京E12345'
+//                + '</td><td>' + 25
+//                + '</td><td>' + '75%'
+//                + '</td>';
+//            sOut += '</tr>';
+//
+//            sOut += '<tr>';
+//            sOut += '<td>' + '2017-03-30'
+//                + '</td><td>' + 4
+//                + '</td><td>' + 12
+//                + '</td><td>' + 12
+//                + '</td><td>' + '全顺'
+//                + '</td><td>' + '京E88888'
+//                + '</td><td>' + 25
+//                + '</td><td>' + '75%'
+//                + '</td>';
+//            sOut += '</tr>';
 
 
+            for(var i = 0; i <  data.length; i++){
+                sOut = sOut +
+                    "<tr>"+
+                    "<td class='credate'>"+  data[i][2] +"</td>" +
+                    "<td><a href='javascript:void(0)' class='count'>"+  data[i][3] +"</a></td>"+
+                    "<td class='totalCapacity'>"+  data[i][4] +"</td>" +
+                    "<td class='totalWeight'>"+  data[i][5] +"</td>" +
+                    "<td class='carModels'>"+  data[i][6] +"</td>" +
+                    "<td class='LicensePlate'>"+ data[i][7] +"</td>" +
+                    "<td class='cube'>"+  data[i][8] +"</td>" +
+                    "<td class='loadRate'>"+  data[i][9] +"</td></tr>";
+            }
+
+
+            return sOut;
+        }
 
 
 	</script>

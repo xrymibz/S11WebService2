@@ -572,4 +572,78 @@ public class UIDao {
         return res;
     }
 
+
+    public List<String[]> getLoadingRateByConditions(JSONArray carrierSelected,
+                                               JSONArray laneSelected,
+                                               JSONArray cargoSelected,
+                                               String dateFrom,
+                                               String dateTo) {
+
+        List<String[]> result = new ArrayList<>();
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            String str ="select sb.carrierAbbr,sb.laneE,sb.date,sum(sb.num),sum(sb.SV) as SV,sum(sb.SW) as SW,GROUP_CONCAT(sb.carType) as ScarType,GROUP_CONCAT(sb.carNumber) as ScarNumber ,sb.WVol as WVol ,concat(left (sum(sb.SV)/ sum(WVol)*100,6),'%') as loadRate from " +
+                    "(select tb.carrierAbbr,tb.laneE,date_format(tb.creDate,'%Y-%m-%d') as date,count(S11_task_item.scanId) as num,sum(S11_task_item.PV) as SV,sum(S11_task_item.PW) as SW, tb.carType as carType ,tb.carNumber as carNumber,tb.waterVol as WVol "+
+                    " from S11_task_item INNER JOIN (select waterVol,carrierAbbr,laneE,taskId,creDate,carType,carNumber from S11_task" +
+                    " where carrierAbbr in :carrierSelected " +
+                    (laneSelected.size() > 0 ?
+                            (" and laneE in :laneSelected ") : "") +
+                    (cargoSelected.size() > 0 ?
+                            (" and cargoType in :cargoSelected") : "") +
+                    " and creDate >= :dateFrom" +
+                    " and creDate <= :dateTo) as tb " +
+                    " on S11_task_item.taskId = tb.taskId " +
+                    " group by tb.laneE,date_format(tb.creDate,'%Y-%m-%d'),tb.carNumber , tb.carType,tb.carrierAbbr) as sb " +
+                    " group by  sb.laneE,sb.date,sb.carrierAbbr";
+
+            Query query = session.createSQLQuery(str);
+            query.setParameterList("carrierSelected", carrierSelected);
+            if (laneSelected.size() > 0) query.setParameterList("laneSelected", laneSelected);
+            if (cargoSelected.size() > 0) query.setParameterList("cargoSelected", cargoSelected);
+            query.setParameter("dateFrom", dateFrom);
+            query.setParameter("dateTo", dateTo);
+
+            List<Object[]> list = query.list();
+            result = formatData(list, 10);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return result;
+    }
+
+
+
+    public List<String[]> getLoadingRateOfChildren(String carrier,
+                                                    String laneE,
+                                                     String credate
+                                                    ) {
+
+        List<String[]> result = new ArrayList<>();
+        try {
+
+            log.debug(carrier+laneE+credate);
+            Session session = sessionFactory.getCurrentSession();
+            String str =
+                    "select tb.carrierAbbr,tb.laneE,date_format(tb.creDate,'%Y-%m-%d') as date,count(S11_task_item.scanId) as num,sum(S11_task_item.PV) as SV,sum(S11_task_item.PW) as SW, tb.carType as carType ,tb.carNumber as carNumber,tb.waterVol as WVol "+
+                    " ,concat(left (sum(S11_task_item.PV) / tb.waterVol *100,6),'%') as loadRate " +
+                    " from S11_task_item    INNER JOIN (select waterVol,carrierAbbr,laneE,taskId,creDate,carType,carNumber from S11_task" +
+                    " where carrierAbbr = :carrier " +
+                    " and laneE = :laneE " +
+                    " and date_format(creDate,'%Y-%m-%d')  = :credate " +
+                    " ) as tb" +
+                    " on S11_task_item.taskId = tb.taskId " +
+                    " group by tb.laneE,date_format(tb.creDate,'%Y-%m-%d'),tb.carNumber , tb.carType,tb.carrierAbbr";
+
+            Query query = session.createSQLQuery(str);
+            query.setParameter("carrier", carrier);
+            query.setParameter("laneE", laneE);
+            query.setParameter("credate", credate);
+
+            List<Object[]> list = query.list();
+            result = formatData(list, 10);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return result;
+    }
 }

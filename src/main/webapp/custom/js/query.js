@@ -103,6 +103,50 @@ function getCountByCondition(basePath, formData){
     return resultData;
 }
 
+function getLoadingRateByConditions(basePath, formData){
+
+    var resultData = [];
+
+    $.ajax({
+        type:"POST",
+        url:basePath + "getLoadingRateByConditions",
+        async : false,
+        timeout : 5000,
+        data : "data=" + formData,
+        dataType : "json",
+        success: function(data){
+            resultData = data.data;
+        },
+        error: function(XMLHttpRequest, textStatus) {
+            console.log("getCountByConditions   " + XMLHttpRequest.status);
+        }
+    });
+    return resultData;
+}
+
+
+function getLoadingRateOfChildren(basePath, formData){
+
+    var resultData = [];
+
+    $.ajax({
+        type:"POST",
+        url:basePath + "getLoadingRateOfChildren",
+        async : false,
+        timeout : 5000,
+        data : "data=" + formData,
+        dataType : "json",
+        success: function(data){
+            resultData = data.data;
+        },
+        error: function(XMLHttpRequest, textStatus) {
+            console.log("getCountByConditions   " + XMLHttpRequest.status);
+        }
+    });
+    return resultData;
+}
+
+
 function downloadFile(url, formData) {
     var body = $('body');
     var form = $("<form>");

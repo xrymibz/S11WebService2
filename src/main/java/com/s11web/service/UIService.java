@@ -452,4 +452,37 @@ public class UIService {
         return uiDao.getCarNumberBycarrier(carrierAbbr,carType, laneName);
     }
 
+    public List<String[]> getLoadingRateByConditions(String inputJsonStr) {
+        try {
+            log.debug("uiService.getLoadingRateByConditions is running :" + inputJsonStr);
+            JSONObject data = JSONObject.fromObject(inputJsonStr);
+            String dateFrom = data.getString("fromDate");
+            log.debug("dateFrom : " + dateFrom);
+            String dateTo = data.getString("toDate");
+            JSONArray carriers = data.getJSONArray("carriers");
+            JSONArray laneList = data.getJSONArray("laneList");
+            JSONArray cargoTypeList = data.getJSONArray("cargoTypeList");
+            return uiDao.getLoadingRateByConditions(carriers, laneList, cargoTypeList, dateFrom, dateTo);
+        } catch (Exception e) {
+            log.info("error when get count", e);
+
+            return null;
+        }
+    }
+
+    public List<String[]> getLoadingRateOfChildren(String inputJsonStr) {
+        try {
+            log.debug("getLoadingRateOfChildren is running :" + inputJsonStr);
+            JSONObject data = JSONObject.fromObject(inputJsonStr);
+            String credate = data.getString("credate");
+            log.debug("credate : " + credate);
+            String carrier = data.getString("carrier");
+            String laneE = data.getString("laneE");
+            return uiDao.getLoadingRateOfChildren(carrier, laneE,credate);
+        } catch (Exception e) {
+            log.info("error when get count", e);
+
+            return null;
+        }
+    }
 }

@@ -153,6 +153,59 @@ public class UIController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/getLoadingRateByConditions")
+    public JsonResult getLoadingRateByConditions(@ModelAttribute("data") String s) {
+
+
+        log.debug("getLoadingRateByConditions is running " + s);
+        boolean flag;
+        String message;
+        List<String[]> res = uiService.getLoadingRateByConditions(s);
+        if (Objects.nonNull(res)) {
+            flag = true;
+            message = "getLoadingRateByConditions info success!";
+        } else {
+            flag = false;
+            message = "get count info error!";
+        }
+        log.debug(message);
+        String[]test = res.get(0);
+        for(String i :test){
+            System.out.println(i+" ");
+        }
+//        log.debug(res.get(0).toString());
+        log.debug("getLoadingRateByConditions is completed ");
+        return new JsonResult<>(flag, message, res);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/getLoadingRateOfChildren")
+    public JsonResult getLoadingRateOfChildren(@ModelAttribute("data") String s) {
+
+
+        log.debug("getLoadingRateOfChildren is running " + s);
+        boolean flag;
+        String message;
+        List<String[]> res = uiService.getLoadingRateOfChildren(s);
+        if (Objects.nonNull(res)) {
+            flag = true;
+            message = "getLoadingRateOfChildren info success!";
+        } else {
+            flag = false;
+            message = "getLoadingRateOfChildren info error!";
+        }
+        log.debug(message);
+        String[]test = res.get(0);
+        for(String i :test){
+            System.out.println(i+" ");
+        }
+//        log.debug(res.get(0).toString());
+        log.debug("getLoadingRateOfChildren is completed ");
+        return new JsonResult<>(flag, message, res);
+    }
+
     @RequestMapping(value = "/barcodeGenerate")
     @ResponseBody
     public ModelAndView barcodeGenerate() {
