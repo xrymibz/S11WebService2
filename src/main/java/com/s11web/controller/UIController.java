@@ -3,6 +3,7 @@ package com.s11web.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -75,7 +76,7 @@ public class UIController {
                                       @RequestParam("operateDate") String operateDate) {
 
         try {
-            exceptionType = java.net.URLDecoder.decode(exceptionType,"UTF-8");
+            exceptionType = java.net.URLDecoder.decode(exceptionType, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -170,9 +171,9 @@ public class UIController {
             message = "get count info error!";
         }
         log.debug(message);
-        String[]test = res.get(0);
-        for(String i :test){
-            System.out.println(i+" ");
+        for (String[] st : res) {
+            st[6] = MergeCarType(st[6]);
+            st[7] = MergeCarNum(st[7]);
         }
 //        log.debug(res.get(0).toString());
         log.debug("getLoadingRateByConditions is completed ");
@@ -197,10 +198,6 @@ public class UIController {
             message = "getLoadingRateOfChildren info error!";
         }
         log.debug(message);
-        String[]test = res.get(0);
-        for(String i :test){
-            System.out.println(i+" ");
-        }
 //        log.debug(res.get(0).toString());
         log.debug("getLoadingRateOfChildren is completed ");
         return new JsonResult<>(flag, message, res);
@@ -223,5 +220,45 @@ public class UIController {
     @ResponseBody
     public ModelAndView loadingRateItem() {
         return new ModelAndView("jsp/loadingRateItem");
+    }
+
+    public String MergeCarType(String s) {
+        String[] temp = s.split(",");
+        HashMap<String, Integer> carType = new HashMap<String, Integer>();
+        for (String i : temp) {
+            if (!carType.containsKey(i)) {
+                carType.put(i, 1);
+            } else {
+                carType.put(i, carType.get(i) + 1);
+            }
+        }
+        Set<Map.Entry<String, Integer>> items = carType.entrySet();
+        String res = "";
+        for (Map.Entry item : items) {
+            if ((int) item.getValue() != 1)
+                res += item.getKey() + " * " + item.getValue() + ",";
+        }
+        if (res.length() > 0) {
+            return res.substring(0, res.length() - 1);
+        } else {
+            return res;
+        }
+    }
+
+    ;
+
+    public String MergeCarNum(String s) {
+        String[] temp = s.split(",");
+        String res = "";
+        for (String i : temp) {
+            if (!i.trim().equals("")) {
+                res += i + ",";
+            }
+        }
+        if (res.length() > 0) {
+            return res.substring(0, res.length() - 1);
+        } else {
+            return res;
+        }
     }
 }
