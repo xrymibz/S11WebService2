@@ -278,7 +278,7 @@
     });
 
     btnDownload.click(function () {
-        downloadFile(basePath + "downloadScanInfo", formData);
+        downloadFile(basePath + "downloadLoadingRateInfo", formData);
     });
 
     tabTaskInfo.on("click", ".count", function () {

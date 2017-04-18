@@ -16,6 +16,7 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.s11web.model.ArcAverageScanTime;
 import com.s11web.model.SheetEntity;
 import com.s11web.util.Constants;
+import com.s11web.util.DataOperation;
 import com.s11web.util.ZipUtil;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -251,6 +252,53 @@ public class UIService {
         ArrayList<SheetEntity> sheetEntityList = new ArrayList<>();
         sheetEntityList.add(summarySheetInfo);
         sheetEntityList.add(detailSheetInfo);
+
+        return (new ExcelOperator()).generateExcel(sheetEntityList);
+    }
+
+    public XSSFWorkbook downloadLoadingRateInfo(String inputJsonStr) {
+
+        String[] colNameList;
+        SheetEntity summarySheetInfo = new SheetEntity();
+        List<String[]> taskResult = getLoadingRateByConditions(inputJsonStr);
+
+        for (String[] st : taskResult) {
+            st[6] = DataOperation.MergeCarType(st[6]);
+            st[7] = DataOperation.MergeCarNum(st[7]);
+        }
+        colNameList = new String[]{
+                Constants.excelColumnName.CARRIER_NAME.val(),
+                Constants.excelColumnName.LANE_NAME.val(),
+                Constants.excelColumnName.SHIP_DATE.val(),
+                Constants.excelColumnName.SUM.val(),
+                Constants.excelColumnName.VOI_SUM.val(),
+                Constants.excelColumnName.WEI_SUM.val(),
+                Constants.excelColumnName.CAR_TYPE.val(),
+                Constants.excelColumnName.CAR_NUMBER.val(),
+                Constants.excelColumnName.WATER_VOL.val(),
+                Constants.excelColumnName.LOADING_RATE.val()};
+        taskResult.add(0, colNameList);
+        summarySheetInfo.setSheetName("Scan Summary");
+        summarySheetInfo.setRowList(taskResult);
+
+//        SheetEntity detailSheetInfo = new SheetEntity();
+//        List<String[]> scanResult = getAllInfoByConditions(inputJsonStr);
+//        colNameList = new String[]{
+//                Constants.excelColumnName.LANE_NAME.val(),
+//                Constants.excelColumnName.ARC_NAME.val(),
+//                Constants.excelColumnName.CARGO_TYPE.val(),
+//                Constants.excelColumnName.SORT_CODE.val(),
+//                Constants.excelColumnName.SHIP_DATE.val(),
+//                Constants.excelColumnName.SCAN_ID.val(),
+//                Constants.excelColumnName.SCAN_TIME.val(),
+//                Constants.excelColumnName.BOX_TYPE.val()};
+//        scanResult.add(0, colNameList);
+//        detailSheetInfo.setSheetName("Scan Detail");
+//        detailSheetInfo.setRowList(scanResult);
+//
+        ArrayList<SheetEntity> sheetEntityList = new ArrayList<>();
+        sheetEntityList.add(summarySheetInfo);
+//        sheetEntityList.add(detailSheetInfo);
 
         return (new ExcelOperator()).generateExcel(sheetEntityList);
     }

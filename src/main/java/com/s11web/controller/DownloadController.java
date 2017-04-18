@@ -155,4 +155,26 @@ public class DownloadController {
         }
     }
 
+
+
+    @ResponseBody
+    @RequestMapping(value = "/downloadLoadingRateInfo")
+    public ModelAndView downloadLoadingRateInfo(@ModelAttribute(value = "data") String data,
+                                         HttpServletResponse response) {
+
+        try {
+            response.setContentType(Constants.mimeType.EXCEL.val());
+            response.setHeader("Content-Disposition",
+                    String.format("attachment; filename=LoadingRateInfo-%d.xlsx", new Date().getTime()));
+            XSSFWorkbook wb = uiService.downloadLoadingRateInfo(data);
+            OutputStream os = response.getOutputStream();
+            wb.write(os);
+            log.debug("download  LoadingRate  Info success!");
+
+            return null;
+        } catch (IOException e) {
+            log.error(e);
+            return new ModelAndView("jsp/errorPage");
+        }
+    }
 }

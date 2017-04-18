@@ -3,6 +3,7 @@ package com.s11web.controller;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+import com.s11web.util.DataOperation;
 import com.sun.corba.se.impl.encoding.OSFCodeSetRegistry;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -172,8 +173,8 @@ public class UIController {
         }
         log.debug(message);
         for (String[] st : res) {
-            st[6] = MergeCarType(st[6]);
-            st[7] = MergeCarNum(st[7]);
+            st[6] = DataOperation.MergeCarType(st[6]);
+            st[7] = DataOperation.MergeCarNum(st[7]);
         }
 //        log.debug(res.get(0).toString());
         log.debug("getLoadingRateByConditions is completed ");
@@ -222,48 +223,5 @@ public class UIController {
         return new ModelAndView("jsp/loadingRateItem");
     }
 
-    public String MergeCarType(String s) {
-        String[] temp = s.split(",");
-        HashMap<String, Integer> carType = new HashMap<String, Integer>();
-        for (String i : temp) {
-//            log.debug(i);
-            if (!carType.containsKey(i)) {
-                carType.put(i, 1);
-            } else {
-                carType.put(i, carType.get(i) + 1);
-            }
-        }
-        Set<Map.Entry<String, Integer>> items = carType.entrySet();
-        String res = "";
-        for (Map.Entry item : items) {
-            if ((int) item.getValue() != 1){
-                res += item.getKey() + " * " + item.getValue() + ",";
-            }else{
-                res += item.getKey() + ",";
-            }
-        }
-//        log.debug(res+"carytpe----------------------");
-        if (res.length() > 0) {
-            return res.substring(0, res.length() - 1);
-        } else {
-            return res;
-        }
-    }
 
-    ;
-
-    public String MergeCarNum(String s) {
-        String[] temp = s.split(",");
-        String res = "";
-        for (String i : temp) {
-            if (!i.trim().equals("")) {
-                res += i + ",";
-            }
-        }
-        if (res.length() > 0) {
-            return res.substring(0, res.length() - 1);
-        } else {
-            return res;
-        }
-    }
 }
