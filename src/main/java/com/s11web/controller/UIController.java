@@ -135,6 +135,8 @@ public class UIController {
 
     }
 
+
+
     @ResponseBody
     @RequestMapping(value = "/getTaskItem")
     public JsonResult getTaskItem(@ModelAttribute("data") String inputJsonStr) {
@@ -154,6 +156,8 @@ public class UIController {
         }
 
     }
+
+
 
     @ResponseBody
     @RequestMapping(value = "/getLoadingRateByConditions")
@@ -204,6 +208,46 @@ public class UIController {
         return new JsonResult<>(flag, message, res);
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/getLoadingRateCount")
+    public JsonResult getLoadingRateCount(@ModelAttribute("data") String inputJsonStr) {
+
+        String message;
+        try {
+            List<String[]> counts = uiService.getLoadingRateCount(inputJsonStr);
+            message = counts.size() <= 0 ? "the result has 0 element" : "success get task total count";
+            log.debug(message);
+
+            return new JsonResult<>(true, message, counts);
+        } catch (Exception e) {
+            message = "exception occur!";
+            log.error(message, e);
+
+            return new JsonResult<>(false, message, null);
+        }
+
+    }
+
+//    @ResponseBody
+//    @RequestMapping(value = "/getLoadingRaTeItem")
+//    public JsonResult getLoadingRaTeItem(@ModelAttribute("data") String inputJsonStr) {
+//
+//        String message;
+//        try {
+//            List<String[]> result = uiService.getLoadingRaTeItem(inputJsonStr);
+//            message = result.size() <= 0 ? "the result has 0 element" : "success get task item";
+//            log.debug(message);
+//
+//            return new JsonResult<>(true, message, result);
+//        } catch (Exception e) {
+//            message = "exception occur!";
+//            log.error(message, e);
+//
+//            return new JsonResult<>(false, message, null);
+//        }
+//
+//    }
+
     @RequestMapping(value = "/barcodeGenerate")
     @ResponseBody
     public ModelAndView barcodeGenerate() {
@@ -219,8 +263,21 @@ public class UIController {
 
     @RequestMapping(value = "/loadingRateItem")
     @ResponseBody
-    public ModelAndView loadingRateItem() {
-        return new ModelAndView("jsp/loadingRateItem");
+    public ModelAndView loadingRateItem(@RequestParam("carrier") String carrier,
+                                        @RequestParam("laneE") String laneE,
+                                        @RequestParam("credate") String credate,
+                                        @RequestParam("carType") String carType,
+                                        @RequestParam("carNumber") String carNumber){
+
+
+
+        ModelAndView mav = new ModelAndView("jsp/loadingRateItem");
+        mav.addObject("carrier", carrier);
+        mav.addObject("laneE", laneE);
+        mav.addObject("credate", credate);
+        mav.addObject("carType", carType);
+        mav.addObject("carNumber", carNumber);
+        return mav;
     }
 
 

@@ -124,6 +124,23 @@ public class UIService {
 
     }
 
+
+    public List<String[]> getLoadingRateCount(String inputJsonStr) {
+        try {
+            JSONObject data = JSONObject.fromObject(inputJsonStr);
+            String carrier = data.getString("carrier");
+            String laneE = data.getString("laneE");
+            String credate = data.getString("credate");
+            String carType = data.getString("carType");
+            String carNumber = data.getString("carNumber");
+            return uiDao.getLoadingRateCount(carrier, laneE, credate, carType, carNumber);
+        } catch (Exception e) {
+            log.info("error when get task count", e);
+
+            return null;
+        }
+    }
+
     /**
      *
      * @return得到arc的平均扫描时间

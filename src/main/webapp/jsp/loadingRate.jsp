@@ -281,24 +281,39 @@
         downloadFile(basePath + "downloadLoadingRateInfo", formData);
     });
 
-    tabTaskInfo.on("click", ".count", function () {
+    tabTaskInfo.on("click", ".count1", function () {
+        alert("yyy");
         console.log("total click");
         var tr = $(this).parent().parent();
-        var taskId = tr.find(".taskId").html();
+        var carrier = tr.find(".carrier").html();
         var laneE = tr.find(".laneE").html();
-        var arcName = tr.find(".arcName").html();
-        var cargoType = tr.find(".cargoType").html();
-        var sortCode = tr.find(".sortCode").html();
-        var count = tr.find(".count").html();
-        var operateDate = tr.find(".creDate").html();
+        var credate = tr.find(".credate").html();
+        var carType = tr.find(".carType").html();
+        var carNumber = tr.find(".carNumber").html();
 
-        window.open(basePath + "loadingRateItem?laneE=" + laneE + "&arcName=" + arcName
-            + "&cargoType=" + cargoType
-            + "&sortCode=" + sortCode
-            + "&count=" + count
-            + "&operateDate=" + operateDate);
+
+//        window.open(basePath + "loadingRateItem?carrier=" + carrier + "&laneE=" + laneE
+//            + "&credate=" + credate
+//            + "&carType=" + carType
+//            + "&carNumber=" + carNumber);
     });
 
+    tabTaskInfo.on("click", ".count2", function () {
+        alert("zzz");
+        console.log("total click");
+        var tr = $(this).parent().parent();
+        var carrier = tr.find(".carrier").html();
+        var laneE = tr.find(".laneE").html();
+        var credate = tr.find(".credate").html();
+        var carType = tr.find(".carType").html();
+        var carNumber = tr.find(".carNumber").html();
+
+
+//        window.open(basePath + "loadingRateItem?carrier=" + carrier + "&laneE=" + laneE
+//            + "&credate=" + credate
+//            + "&carType=" + carType
+//            + "&carNumber=" + carNumber);
+    })
 
     function showTaskInfo(data) {
         $("#tabTaskInfo thead").html(
@@ -326,11 +341,11 @@
                 "<td class='carrier'>" + data[i][0] + "</td>" +
                 "<td class='laneE'>" + data[i][1] + "</td>" +
                 "<td class='credate'>" + data[i][2] + "</td>" +
-                "<td><a href='javascript:void(0)' class='count'>" + data[i][3] + "</a></td>" +
+                "<td><a href='javascript:void(0)' class='count1'>" + data[i][3] + "</a></td>" +
                 "<td class='totalCapacity'>" + data[i][4] + "</td>" +
                 "<td class='totalWeight'>" + data[i][5] + "</td>" +
-                "<td class='carModels'>" + data[i][6] + "</td>" +
-                "<td class='LicensePlate'>" + data[i][7] + "</td>" +
+                "<td class='carType'>" + data[i][6] + "</td>" +
+                "<td class='carNumber'>" + data[i][7] + "</td>" +
                 "<td class='cube'>" + data[i][8] + "</td>" +
                 "<td class='loadRate'>" + data[i][9] + "</td></tr>";
             total += parseInt(data[i][4]);
@@ -382,9 +397,9 @@
                 }, {
                     "data": "totalWeight"
                 }, {
-                    "data": "carModels"
+                    "data": "carType"
                 }, {
-                    "data": "LicensePlate"
+                    "data": "carNumber"
                 }, {
                     "data": "cube"
                 }, {
@@ -422,11 +437,11 @@
             sOut = sOut +
                 "<tr>" +
                 "<td class='credate'>" + data[i][2] + "</td>" +
-                "<td><a href='javascript:void(0)' class='count'>" + data[i][3] + "</a></td>" +
+                "<td><a href='javascript:void(0)' class='count2'>" + data[i][3] + "</a></td>" +
                 "<td class='totalCapacity'>" + data[i][4] + "</td>" +
                 "<td class='totalWeight'>" + data[i][5] + "</td>" +
-                "<td class='carModels'>" + data[i][6] + "</td>" +
-                "<td class='LicensePlate'>" + data[i][7] + "</td>" +
+                "<td class='carType'>" + data[i][6] + "</td>" +
+                "<td class='carNumber'>" + data[i][7] + "</td>" +
                 "<td class='cube'>" + data[i][8] + "</td>" +
                 "<td class='loadRate'>" + data[i][9] + "</td></tr>";
         }

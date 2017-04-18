@@ -75,12 +75,11 @@
 		var btnDownLoadTaskDetail = $("#btnDownLoadTaskDetail");
 
 		var formData = {};
+		formData.carrier = "${carrier}";
 		formData.laneE = "${laneE}";
-		formData.arc = "${arcName}";
-		formData.cargoType = "${cargoType}";
-		formData.sortCode = "${sortCode}";
-		formData.operateDate = "${operateDate}";
-		formData.shipNumber = "${count}";
+		formData.credate = "${credate}";
+		formData.carType = "${carType}";
+		formData.carNumber = "${carNumber}";
 		formData = $.toJSON(formData);
 
 		tabTaskInfo.dataTable({
@@ -92,8 +91,8 @@
 			  "bAutoWidth": false
 		  });
 
-		showTaskCount( getTaskCount(basePath, formData) );
-		showTaskItem( getTaskItem(basePath, formData) );
+		showTaskCount( getLoadingRateCount(basePath, formData) );
+		showTaskItem( getLoadingRaTeItem(basePath, formData) );
 
 		btnDownLoadTaskDetail.click(function(){
 			downloadFile(basePath + "downloadScanItemDetail", formData);

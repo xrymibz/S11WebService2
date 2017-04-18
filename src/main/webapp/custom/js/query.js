@@ -239,3 +239,45 @@ function getTaskItem(basePath, formData){
 
     return resultData;
 }
+
+function getLoadingRateCount(basePath, formData) {
+    var resultData = [];
+
+    $.ajax({
+        type: "POST",
+        url: basePath + "/getLoadingRateCount",
+        data: "data=" + formData,
+        dataType: "json",
+        async: false,
+        timeout: 5000,
+        success: function(data) {
+            resultData = data.data;
+        },
+        error: function(XMLHttpRequest, textStatus) {
+            console.log("getTaskCount   " + XMLHttpRequest.status);
+        }
+    });
+
+    return resultData;
+}
+
+function getLoadingRaTeItem(basePath, formData){
+    var resultData = [];
+
+    $.ajax({
+        type:"POST",
+        url:basePath + "/getLoadingRaTeItem",
+        async : false,
+        timeout : 5000,
+        data : "data=" + formData,
+        dataType : "json",
+        success:function(data){
+            resultData = data.data;
+        },
+        error: function(XMLHttpRequest, textStatus) {
+            console.log("getTaskItem   " + XMLHttpRequest.status);
+        }
+    });
+
+    return resultData;
+}

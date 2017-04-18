@@ -149,6 +149,38 @@ public class UIDao {
         return result;
     }
 
+    public List<String[]> getLoadingRateCount(String carrier,
+                                       String laneE,
+                                       String credate,
+                                       String carType,
+                                       String carNumber) {
+        List<String[]> result = new ArrayList<>();
+        try {
+
+
+            String sql = "SELECT ts.taskId,ts.carrierAbbr,ts.laneE,ts.sortCode ,count(it.scanId) as num,ts.creDate " +
+                    "from  S11_task as ts  " +
+                    "LEFT JOIN S11_task_item as it " +
+                    "on ts.taskId = it.taskId   " +
+                    "where ts.carrierAbbr = :carrier  " +
+                    "and date_format(ts.creDate,'%Y-%m-%d') = :credate " +
+                    "GROUP BY ts.taskId";
+
+            Query query = sessionFactory.getCurrentSession().createSQLQuery(sql);
+            query.setParameter("carrier", carrier);
+            query.setParameter("credate", credate);
+//            query.setParameter("carType", carType);
+//            if (cargoType.equals("VReturn")) query.setParameter("sortCode", sortCode);
+//            query.setParameter("operateDate", operateDate);
+
+            List<Object[]> list = query.list();
+            result = formatData(list, 2);
+        } catch (Exception e) {
+            log.error(e);
+        }
+
+        return result;
+    }
     public List<String[]> getExceptionTaskCount(String laneE,
                                                 String arc,
                                                 String cargoType,
