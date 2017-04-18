@@ -33,6 +33,11 @@ public class S11TaskItem {
 	@Getter @Setter
 	private String box;
 
+	@Getter @Setter
+	private int PW;
+
+	@Getter @Setter
+	private int PV;
 
 	public int getId() {
 		return id;
@@ -72,5 +77,21 @@ public class S11TaskItem {
 
 	public void setBox(String box) {
 		this.box = box;
+	}
+
+	public int getPW() {
+		return PW;
+	}
+
+	public void setPW(int PW) {
+		this.PW = PW;
+	}
+
+	public int getPV() {
+		return PV;
+	}
+
+	public void setPV(int PV) {
+		this.PV = PV;
 	}
 }

@@ -39,15 +39,15 @@ public class TimingTask {
     /**
      * 更新task_item表，根据ScanID,获取箱型、体积、重量等信息。
      */
-    // 每晚晚上23点30分更新
- //   @Scheduled(cron="0 30 23  * * ? ")
+    // 每晚凌晨1点更新
+ //   @Scheduled(cron="0 0 1  * * ? ")
     public void updateBoxInfoByScanID(){
         log.debug("update is running");
 
         //获取当前日期
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String TDate = sdf.format(d);
+        String TDate = sdf.format(sdf.format(new Date(d.getTime() - (long)1 * 24 * 60 * 60 * 1000)));
         log.debug("----------today is : " + TDate+"------------");
         //获取当天扫描所有的货物的ScanID
         List<String> ScanIDitems = auxiliaryService.getScanIDbyDate(TDate);

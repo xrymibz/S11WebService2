@@ -57,6 +57,9 @@ public class S11Task {
 	@Getter @Setter
 	private String carNumber;
 
+	@Getter @Setter
+	private double waterVol;
+
 	public int getId() {
 		return id;
 	}
@@ -159,5 +162,13 @@ public class S11Task {
 
 	public void setCarNumber(String carNumber) {
 		this.carNumber = carNumber;
+	}
+
+	public double getWaterVol() {
+		return waterVol;
+	}
+
+	public void setWaterVol(double waterVol) {
+		this.waterVol = waterVol;
 	}
 }

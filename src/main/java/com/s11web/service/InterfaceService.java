@@ -68,7 +68,6 @@ public class InterfaceService {
                 s11_taskItem.setScanDatetime(scanItemTime);
                 s11_taskItem.setBox(scanItems.getJSONObject(i).getString("box"));
                 s11TaskItemList.add(s11_taskItem);
-
                 ++scanItemNum;
             } catch (ParseException e) {
                 log.info(scanItems.getJSONObject(i).getString("scanDatetime"), e);
@@ -99,6 +98,9 @@ public class InterfaceService {
         s11_task.setTaskId(s11TaskJson.getString("taskId"));
         if(s11TaskJson.get("carType")!=null){
             s11_task.setCarType(s11TaskJson.getString("carType"));
+            double WaterVol = getWaterVolbyCarType(s11TaskJson.getString("carType"));
+//            log.debug(WaterVol+"WaterVol");
+            s11_task.setWaterVol(WaterVol);
         }
         if(s11TaskJson.get("carNumber")!=null){
             s11_task.setCarNumber(s11TaskJson.getString("carNumber"));
@@ -345,5 +347,10 @@ public class InterfaceService {
             }
         }
         return successKeyList;
+    }
+    public Double getWaterVolbyCarType(String s){
+        String[]s1 = s.split("\\(");
+        String[]s2 = s1[1].split("\\)");
+        return Double.parseDouble(s2[0]);
     }
 }
