@@ -582,9 +582,15 @@ public class UIDao {
         List<String[]> result = new ArrayList<>();
         try {
             Session session = sessionFactory.getCurrentSession();
-            String str ="select sb.carrierAbbr,sb.laneE,sb.date,sum(sb.num),sum(sb.SV) as SV,sum(sb.SW) as SW,GROUP_CONCAT(sb.carType) as ScarType,GROUP_CONCAT(sb.carNumber) as ScarNumber ,sb.WVol as WVol ,concat(left (sum(sb.SV)/ sum(WVol)*100,6),'%') as loadRate from " +
-                    "(select tb.carrierAbbr,tb.laneE,date_format(tb.creDate,'%Y-%m-%d') as date,count(S11_task_item.scanId) as num,sum(S11_task_item.PV) as SV,sum(S11_task_item.PW) as SW, tb.carType as carType ,tb.carNumber as carNumber,tb.waterVol as WVol "+
-                    " from S11_task_item INNER JOIN (select waterVol,carrierAbbr,laneE,taskId,creDate,carType,carNumber from S11_task" +
+            String str =
+                    "select sb.carrierAbbr,sb.laneE,sb.date,sum(sb.num),sum(sb.SV) as SV,sum(sb.SW) as " +
+                    "SW,GROUP_CONCAT(sb.carType) as ScarType,GROUP_CONCAT(sb.carNumber) as ScarNumber ,sum(sb.WVol) " +
+                    "as WVol ,concat(left (sum(sb.SV)/ sum(WVol)*100,6),'%') as loadRate from " +
+                    "(select tb.carrierAbbr,tb.laneE,date_format(tb.creDate,'%Y-%m-%d') as " +
+                    "date,count(S11_task_item.scanId) as num,sum(S11_task_item.PV) as SV,sum(S11_task_item.PW) " +
+                    "as SW, tb.carType as carType ,tb.carNumber as carNumber,tb.waterVol as WVol "+
+                    " from S11_task_item INNER JOIN (select waterVol,carrierAbbr,laneE,taskId,creDate,carType,carNumber " +
+                    "from S11_task" +
                     " where carrierAbbr in :carrierSelected " +
                     (laneSelected.size() > 0 ?
                             (" and laneE in :laneSelected ") : "") +

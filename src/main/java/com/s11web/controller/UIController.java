@@ -226,6 +226,7 @@ public class UIController {
         String[] temp = s.split(",");
         HashMap<String, Integer> carType = new HashMap<String, Integer>();
         for (String i : temp) {
+//            log.debug(i);
             if (!carType.containsKey(i)) {
                 carType.put(i, 1);
             } else {
@@ -235,9 +236,13 @@ public class UIController {
         Set<Map.Entry<String, Integer>> items = carType.entrySet();
         String res = "";
         for (Map.Entry item : items) {
-            if ((int) item.getValue() != 1)
+            if ((int) item.getValue() != 1){
                 res += item.getKey() + " * " + item.getValue() + ",";
+            }else{
+                res += item.getKey() + ",";
+            }
         }
+//        log.debug(res+"carytpe----------------------");
         if (res.length() > 0) {
             return res.substring(0, res.length() - 1);
         } else {
