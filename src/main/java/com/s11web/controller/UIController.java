@@ -215,7 +215,7 @@ public class UIController {
         String message;
         try {
             List<String[]> counts = uiService.getLoadingRateCount(inputJsonStr);
-            message = counts.size() <= 0 ? "the result has 0 element" : "success get task total count";
+            message = counts.size() <= 0 ? "the result has 0 element" : "success getLoadingRateCount";
             log.debug(message);
 
             return new JsonResult<>(true, message, counts);
@@ -228,25 +228,25 @@ public class UIController {
 
     }
 
-//    @ResponseBody
-//    @RequestMapping(value = "/getLoadingRaTeItem")
-//    public JsonResult getLoadingRaTeItem(@ModelAttribute("data") String inputJsonStr) {
-//
-//        String message;
-//        try {
-//            List<String[]> result = uiService.getLoadingRaTeItem(inputJsonStr);
-//            message = result.size() <= 0 ? "the result has 0 element" : "success get task item";
-//            log.debug(message);
-//
-//            return new JsonResult<>(true, message, result);
-//        } catch (Exception e) {
-//            message = "exception occur!";
-//            log.error(message, e);
-//
-//            return new JsonResult<>(false, message, null);
-//        }
-//
-//    }
+    @ResponseBody
+    @RequestMapping(value = "/getLoadingRaTeItem")
+    public JsonResult getLoadingRaTeItem(@ModelAttribute("data") String inputJsonStr) {
+
+        String message;
+        try {
+            List<String[]> result = uiService.getLoadingRaTeItem(inputJsonStr);
+            message = result.size() <= 0 ? "the result has 0 element" : "success getLoadingRaTeItem";
+            log.debug(message);
+
+            return new JsonResult<>(true, message, result);
+        } catch (Exception e) {
+            message = "exception occur!";
+            log.error(message, e);
+
+            return new JsonResult<>(false, message, null);
+        }
+
+    }
 
     @RequestMapping(value = "/barcodeGenerate")
     @ResponseBody
@@ -267,16 +267,19 @@ public class UIController {
                                         @RequestParam("laneE") String laneE,
                                         @RequestParam("credate") String credate,
                                         @RequestParam("carType") String carType,
-                                        @RequestParam("carNumber") String carNumber){
-
+                                        @RequestParam("carNumber") String carNumber,
+                                        @RequestParam("count") String count,
+                                        @RequestParam("isSum") String isSum){
 
 
         ModelAndView mav = new ModelAndView("jsp/loadingRateItem");
-        mav.addObject("carrier", carrier);
-        mav.addObject("laneE", laneE);
+        mav.addObject("carrier", DataOperation.decode(carrier));
+        mav.addObject("laneE", DataOperation.decode(laneE));
         mav.addObject("credate", credate);
-        mav.addObject("carType", carType);
-        mav.addObject("carNumber", carNumber);
+        mav.addObject("carType", DataOperation.decode(carType));
+        mav.addObject("carNumber", DataOperation.decode(carNumber));
+        mav.addObject("count", count);
+        mav.addObject("isSum", isSum);
         return mav;
     }
 

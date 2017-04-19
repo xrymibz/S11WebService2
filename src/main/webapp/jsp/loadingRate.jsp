@@ -282,7 +282,6 @@
     });
 
     tabTaskInfo.on("click", ".count1", function () {
-        alert("yyy");
         console.log("total click");
         var tr = $(this).parent().parent();
         var carrier = tr.find(".carrier").html();
@@ -290,29 +289,37 @@
         var credate = tr.find(".credate").html();
         var carType = tr.find(".carType").html();
         var carNumber = tr.find(".carNumber").html();
+        var count = tr.find(".count1").html();
+        var isSum = "1";
 
 
-//        window.open(basePath + "loadingRateItem?carrier=" + carrier + "&laneE=" + laneE
-//            + "&credate=" + credate
-//            + "&carType=" + carType
-//            + "&carNumber=" + carNumber);
+        window.open(basePath + "loadingRateItem?carrier=" + carrier + "&laneE=" + laneE
+            + "&credate=" + credate
+            + "&carType=" + carType
+            + "&carNumber=" + carNumber
+            + "&count=" + count
+            + "&isSum=" + isSum);
     });
 
     tabTaskInfo.on("click", ".count2", function () {
-        alert("zzz");
         console.log("total click");
         var tr = $(this).parent().parent();
-        var carrier = tr.find(".carrier").html();
-        var laneE = tr.find(".laneE").html();
+        var prebro = $(this).parent().parent().parent().parent().parent().parent().prev();
+        var carrier = prebro.find(".carrier").html();
+        var laneE = prebro.find(".laneE").html();
         var credate = tr.find(".credate").html();
         var carType = tr.find(".carType").html();
         var carNumber = tr.find(".carNumber").html();
+        var count = tr.find(".count2").html();
+        var isSum = "0";
 
 
-//        window.open(basePath + "loadingRateItem?carrier=" + carrier + "&laneE=" + laneE
-//            + "&credate=" + credate
-//            + "&carType=" + carType
-//            + "&carNumber=" + carNumber);
+        window.open(basePath + "loadingRateItem?carrier=" + carrier + "&laneE=" + laneE
+            + "&credate=" + credate
+            + "&carType=" + carType
+            + "&carNumber=" + carNumber
+            + "&count=" + count
+            + "&isSum=" + isSum);
     })
 
     function showTaskInfo(data) {
@@ -447,6 +454,7 @@
         }
         return sOut;
     }
+    $(".loadingRate").css("color", "white");
 </script>
 </html>
 

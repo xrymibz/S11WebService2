@@ -34,12 +34,14 @@ public class Constants {
         EXCEPTION_TYPE("异常类型"),
         DESCRIPTION("异常描述"),
         CARRIER_NAME("运输商"),
-        VOI_SUM("总体积"),
+        VOL_SUM("总体积"),
         WEI_SUM("总重量"),
         CAR_TYPE("车型"),
         CAR_NUMBER("车牌"),
         WATER_VOL("水方"),
-        LOADING_RATE("装载率");
+        LOADING_RATE("装载率"),
+        VOL("总体积"),
+        WEI("总重量");
 
 
         private String nameString;

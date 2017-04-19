@@ -10,6 +10,8 @@ import java.util.Set;
  */
 public class DataOperation {
 
+
+    //合并车型显示
     public static String MergeCarType(String s) {
         String[] temp = s.split(",");
         HashMap<String, Integer> carType = new HashMap<String, Integer>();
@@ -37,6 +39,8 @@ public class DataOperation {
             return res;
         }
     }
+
+    //合并车牌显示
     public static String MergeCarNum(String s) {
         String[] temp = s.split(",");
         String res = "";
@@ -51,4 +55,17 @@ public class DataOperation {
             return res;
         }
     }
-}
+
+    //解决前端jsp传输中文乱码
+    public static String decode(String value){
+            try {
+                if (value == null) return null;
+                return new String(value.getBytes("ISO-8859-1"),"utf-8");
+//注: 这里的utf-8, 应视提交页面的编码而定.
+            }
+            catch(Exception ex) {
+                return value;
+            }
+        }
+    }
+

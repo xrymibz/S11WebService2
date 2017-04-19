@@ -153,32 +153,73 @@ public class UIDao {
                                        String laneE,
                                        String credate,
                                        String carType,
-                                       String carNumber) {
+                                       String carNumber,
+                                       String isSum) {
         List<String[]> result = new ArrayList<>();
         try {
-
+            log.debug("getLoadingRateCount is beginning");
+            if(carNumber==null||carNumber.length()==0){
+                carNumber = " ";
+            }
 
             String sql = "SELECT ts.taskId,ts.carrierAbbr,ts.laneE,ts.sortCode ,count(it.scanId) as num,ts.creDate " +
-                    "from  S11_task as ts  " +
-                    "LEFT JOIN S11_task_item as it " +
-                    "on ts.taskId = it.taskId   " +
-                    "where ts.carrierAbbr = :carrier  " +
-                    "and date_format(ts.creDate,'%Y-%m-%d') = :credate " +
-                    "GROUP BY ts.taskId";
+                    " from  S11_task as ts  " +
+                    " LEFT JOIN S11_task_item as it " +
+                    " on ts.taskId = it.taskId   " +
+                    " where ts.carrierAbbr = :carrier  " +
+                    "and ts.laneE = :laneE" +
+                    (isSum.equals("0") ? " and ts.carType = :carType and ts.carNumber = :carNumber":" ") +
+                    " and date_format(ts.creDate,'%Y-%m-%d') = :credate " +
+                    " GROUP BY ts.taskId";
 
             Query query = sessionFactory.getCurrentSession().createSQLQuery(sql);
             query.setParameter("carrier", carrier);
+            query.setParameter("laneE", laneE);
             query.setParameter("credate", credate);
-//            query.setParameter("carType", carType);
-//            if (cargoType.equals("VReturn")) query.setParameter("sortCode", sortCode);
-//            query.setParameter("operateDate", operateDate);
-
+            if(isSum.equals("0")) {
+                query.setParameter("carNumber", carNumber);
+                query.setParameter("carType", carType);
+            };
             List<Object[]> list = query.list();
-            result = formatData(list, 2);
+            result = formatData(list, 6);
         } catch (Exception e) {
             log.error(e);
         }
+        return result;
+    }
+    public List<String[]> getLoadingRaTeItem(String carrier,
+                                              String laneE,
+                                              String credate,
+                                              String carType,
+                                              String carNumber,
+                                              String isSum) {
+        List<String[]> result = new ArrayList<>();
+        try {
+            if(carNumber==null||carNumber.length()==0){
+                carNumber = " ";
+            }
+            String sql = "SELECT  ts.laneE,it.scanId,it.scanDatetime,it.box,it.PV,it.PW  " +
+                    " from  S11_task as ts  " +
+                    " LEFT JOIN S11_task_item as it " +
+                    " on ts.taskId = it.taskId   " +
+                    " where ts.carrierAbbr = :carrier  " +
+                    "and ts.laneE = :laneE" +
+                    (isSum.equals("0") ? " and ts.carType = :carType and ts.carNumber = :carNumber":" ") +
+                    " and date_format(ts.creDate,'%Y-%m-%d') = :credate ";
 
+            Query query = sessionFactory.getCurrentSession().createSQLQuery(sql);
+            query.setParameter("carrier", carrier);
+            query.setParameter("laneE", laneE);
+            query.setParameter("credate", credate);
+            if(isSum.equals("0")) {
+                query.setParameter("carNumber", carNumber);
+                query.setParameter("carType", carType);
+            };
+            List<Object[]> list = query.list();
+            result = formatData(list, 6);
+        } catch (Exception e) {
+            log.error(e);
+        }
         return result;
     }
     public List<String[]> getExceptionTaskCount(String laneE,

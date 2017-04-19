@@ -133,12 +133,32 @@ public class UIService {
             String credate = data.getString("credate");
             String carType = data.getString("carType");
             String carNumber = data.getString("carNumber");
-            return uiDao.getLoadingRateCount(carrier, laneE, credate, carType, carNumber);
+            String isSum = data.getString("isSum");
+            return uiDao.getLoadingRateCount(carrier, laneE, credate, carType, carNumber,isSum);
         } catch (Exception e) {
             log.info("error when get task count", e);
 
             return null;
         }
+    }
+
+    public List<String[]> getLoadingRaTeItem(String inputJsonStr) {
+
+        try {
+            JSONObject data = JSONObject.fromObject(inputJsonStr);
+            String carrier = data.getString("carrier");
+            String laneE = data.getString("laneE");
+            String credate = data.getString("credate");
+            String carType = data.getString("carType");
+            String carNumber = data.getString("carNumber");
+            String isSum = data.getString("isSum");
+            return uiDao.getLoadingRaTeItem(carrier, laneE, credate, carType, carNumber,isSum);
+        } catch (Exception e) {
+            log.info("error when get task item", e);
+
+            return null;
+        }
+
     }
 
     /**
@@ -288,7 +308,7 @@ public class UIService {
                 Constants.excelColumnName.LANE_NAME.val(),
                 Constants.excelColumnName.SHIP_DATE.val(),
                 Constants.excelColumnName.SUM.val(),
-                Constants.excelColumnName.VOI_SUM.val(),
+                Constants.excelColumnName.VOL_SUM.val(),
                 Constants.excelColumnName.WEI_SUM.val(),
                 Constants.excelColumnName.CAR_TYPE.val(),
                 Constants.excelColumnName.CAR_NUMBER.val(),
@@ -430,6 +450,58 @@ public class UIService {
 
         return (new ExcelOperator()).generateExcel(sheetEntityList);
     }
+
+
+    public XSSFWorkbook downloadLoadingRateItemDetail(String inputJsonStr) {
+
+        String exceptionType = null;
+        JSONObject data = JSONObject.fromObject(inputJsonStr);
+        String carrier = data.getString("carrier");
+        String laneE = data.getString("laneE");
+        String credate = data.getString("credate");
+        String carType = data.getString("carType");
+        String carNumber = data.getString("carNumber");
+        String count = data.getString("count");
+        String isSum = data.getString("isSum");
+
+        List<String[]> taskResult;
+
+
+        taskResult = uiDao.getLoadingRaTeItem(carrier, laneE, credate, carType, carNumber,isSum);
+
+
+
+        String[] colNameList;
+        String[] dataList;
+
+        SheetEntity summarySheetInfo = new SheetEntity();
+
+            colNameList = new String[]{
+                    Constants.excelColumnName.CARRIER_NAME.val(),
+                    Constants.excelColumnName.LANE_NAME.val(),
+                    Constants.excelColumnName.SUM.val(),
+                    Constants.excelColumnName.SCAN_TIME.val()};
+            taskResult.add(0, colNameList);
+            dataList = new String[]{carrier, laneE, count, credate};
+            taskResult.add(1, dataList);
+            taskResult.add(2, new String[0]);
+            colNameList = new String[]{
+                    Constants.excelColumnName.LANE_NAME.val(),
+                    Constants.excelColumnName.SCAN_ID.val(),
+                    Constants.excelColumnName.SCAN_TIME.val(),
+                    Constants.excelColumnName.BOX_TYPE.val(),
+                    Constants.excelColumnName.VOL.val(),
+                    Constants.excelColumnName.WEI.val()};
+            taskResult.add(3, colNameList);
+
+        summarySheetInfo.setSheetName("Task Details");
+        summarySheetInfo.setRowList(taskResult);
+
+        List<SheetEntity> sheetEntityList = Arrays.asList(summarySheetInfo);
+
+        return (new ExcelOperator()).generateExcel(sheetEntityList);
+    }
+
 
     private List<String[]> formatImgUrl(List<String[]> inputData, int imgCol) {
         for (String[] strings : inputData) {

@@ -25,6 +25,7 @@
 					<table id = "tabTaskInfo">
 						<thead>
 							<tr>
+                            <th style='text-align:center'>taskID</th>
 							<th style='text-align:center'>运输商</th>
 							<th style='text-align:center'>laneE</th>
 							<th style='text-align:center'>Sort Code</th>
@@ -80,6 +81,8 @@
 		formData.credate = "${credate}";
 		formData.carType = "${carType}";
 		formData.carNumber = "${carNumber}";
+        formData.count = "${count}";
+        formData.isSum = "${isSum}";
 		formData = $.toJSON(formData);
 
 		tabTaskInfo.dataTable({
@@ -95,22 +98,25 @@
 		showTaskItem( getLoadingRaTeItem(basePath, formData) );
 
 		btnDownLoadTaskDetail.click(function(){
-			downloadFile(basePath + "downloadScanItemDetail", formData);
+			downloadFile(basePath + "downloadLoadingRateItemDetail", formData);
 		});
 		$(".loadingRate").css("color", "white");
 
 		function showTaskCount(data){
 			var html = "";
-			var sameInfo = "<td>上海展欣</td>" +
-						   "<td>NKG1-HFHW合肥-JODSSHUSHANNDD</td>" +
-					       "<td>${sortCode}</td>" +
-						   "<td>1</td>" +
-			               "<td>2017-03-30 14:39:58</td>";
-			for(var i = 0; i < 1; ++i) {
+			<%--var sameInfo = "<td>上海展欣</td>" +--%>
+						   <%--"<td>NKG1-HFHW合肥-JODSSHUSHANNDD</td>" +--%>
+					       <%--"<td>${sortCode}</td>" +--%>
+						   <%--"<td>1</td>" +--%>
+			               <%--"<td>2017-03-30 14:39:58</td>";--%>
+			for(var i = 0; i < data.length; ++i) {
 				html += "<tr>" +
-						sameInfo
-//						"<td>" + data[i][1] + "</td>" +
-//						"<td>" + data[i][0] + "</td>" +
+                    "<td class='TaskID'>" + data[i][0] + "</td>" +
+                    "<td class='Carrier'>" + data[i][1] + "</td>" +
+                    "<td class='LaneE'>" + data[i][2] + "</td>" +
+                    "<td class='SortCode'>" + data[i][3] + "</td>" +
+                    "<td class='ScanNum'>" + data[i][4] + "</td>" +
+                    "<td class='CreDate'>" + data[i][5] + "</td>" +
 						"</tr>";
 			}
 			tabTaskInfo.find("tbody").html($(html));
@@ -118,15 +124,15 @@
 
 		function showTaskItem(data){
 			var html = "";
-			for (var i = 0; i < 1; ++i){
-				html += "<tr>" +
-						"<td>" + 'NKG1-HFHW合肥-JODSSHUSHANNDD' + "</td>" +
-						"<td>" + '58810230021044' + "</td>" +
-						"<td>" + '2017-03-30 14:39:54' + "</td>" +
-                        "<td>" + '中型' + "</td>" +
-                        "<td>" + '12' + "</td>" +
-                        "<td>" + '25' + "</td>" +
-						"</tr>";
+			for (var i = 0; i < data.length; ++i){
+                html += "<tr>" +
+                    "<td class='LaneE_Item'>" + data[i][0] + "</td>" +
+                    "<td class='ScanID_Item'>" + data[i][1] + "</td>" +
+                    "<td class='ScanTime_Item'>" + data[i][2] + "</td>" +
+                    "<td class='Box_Item'>" + data[i][3] + "</td>" +
+                    "<td class='Vol_Item'>" + data[i][4] + "</td>" +
+                    "<td class='Wei_Item'>" + data[i][5] + "</td>" +
+                    "</tr>";
 			}
 			tabTaskItem.find("tbody").html("");
 			tabTaskItem.find("tbody").append(html);
@@ -155,5 +161,6 @@
 				}
 			});
 		}
+
 	</script>
 </html>
