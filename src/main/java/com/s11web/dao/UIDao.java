@@ -164,7 +164,7 @@ public class UIDao {
 
             String sql = "SELECT ts.taskId,ts.carrierAbbr,ts.laneE,ts.sortCode ,count(it.scanId) as num,ts.creDate " +
                     " from  S11_task as ts  " +
-                    " LEFT JOIN S11_task_item as it " +
+                    " INNER JOIN S11_task_item as it " +
                     " on ts.taskId = it.taskId   " +
                     " where ts.carrierAbbr = :carrier  " +
                     "and ts.laneE = :laneE" +
@@ -200,7 +200,7 @@ public class UIDao {
             }
             String sql = "SELECT  ts.laneE,it.scanId,it.scanDatetime,it.box,it.PV,it.PW  " +
                     " from  S11_task as ts  " +
-                    " LEFT JOIN S11_task_item as it " +
+                    " INNER JOIN S11_task_item as it " +
                     " on ts.taskId = it.taskId   " +
                     " where ts.carrierAbbr = :carrier  " +
                     "and ts.laneE = :laneE" +
