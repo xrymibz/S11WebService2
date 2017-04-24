@@ -38,9 +38,10 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 
 import com.s11web.dao.InterfaceDao;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-@Component("interfaceService")
+@Service("interfaceService")
 public class InterfaceService {
 
     @Autowired

@@ -26,9 +26,9 @@ public class DataOperation {
         Set<Map.Entry<String, Integer>> items = carType.entrySet();
         String res = "";
         for (Map.Entry item : items) {
-            if ((int) item.getValue() != 1){
+            if ((int) item.getValue() != 1) {
                 res += item.getKey() + " * " + item.getValue() + ",";
-            }else{
+            } else {
                 res += item.getKey() + ",";
             }
         }
@@ -57,15 +57,47 @@ public class DataOperation {
     }
 
     //解决前端jsp传输中文乱码
-    public static String decode(String value){
-            try {
-                if (value == null) return null;
-                return new String(value.getBytes("ISO-8859-1"),"utf-8");
+    public static String decode(String value) {
+        try {
+            if (value == null) return null;
+            return new String(value.getBytes("ISO-8859-1"), "utf-8");
 //注: 这里的utf-8, 应视提交页面的编码而定.
+        } catch (Exception ex) {
+            return value;
+        }
+    }
+
+
+    //通过车型计算车辆数量
+    private  static int getNumByCarType(String s) {
+        String[] temp = s.split(",");
+        HashMap<String, Integer> carType = new HashMap<String, Integer>();
+        for (String i : temp) {
+//            log.debug(i);
+            if (!carType.containsKey(i)) {
+                carType.put(i, 1);
+            } else {
+                carType.put(i, carType.get(i) + 1);
             }
-            catch(Exception ex) {
-                return value;
+        }
+        Set<Map.Entry<String, Integer>> items = carType.entrySet();
+        if (items.size() > 1) {
+            return 2;
+        }
+        return 1;
+    }
+    public static  String getNum(String cartype,String carnumber){
+        if(getNumByCarType(cartype)>1){
+            return "2";
+        }else{
+            String[] temp = carnumber.split(",");
+            if(temp.length>1){
+                return "2";
+            }else{
+                return "1";
             }
         }
     }
+
+}
 

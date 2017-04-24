@@ -343,8 +343,13 @@
         console.log(data);
         for (var i = 0; i < data.length; i++) {
             htmlStr = htmlStr +
-                "<tr>" +
-                "<td class='Id'>" + data[i][0] + "</td>" +
+                "<tr>";
+                    if(data[i][10]=="1"){
+                        htmlStr = htmlStr +  "<td class='OneNum'>" + data[i][0] + "</td>";
+                    }else {
+                        htmlStr = htmlStr +  "<td class='details-control'>" + data[i][0] + "</td>";
+                    }
+            htmlStr = htmlStr +
                 "<td class='carrier'>" + data[i][0] + "</td>" +
                 "<td class='laneE'>" + data[i][1] + "</td>" +
                 "<td class='credate'>" + data[i][2] + "</td>" +
@@ -387,7 +392,7 @@
             },
             "columns": [
                 {
-                    "class": 'details-control',
+  //                  "class": 'details-control',
                     "orderable": false,
                     "data": null,
                     "defaultContent": ''

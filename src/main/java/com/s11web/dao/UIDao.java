@@ -198,7 +198,7 @@ public class UIDao {
             if(carNumber==null||carNumber.length()==0){
                 carNumber = " ";
             }
-            String sql = "SELECT  ts.laneE,it.scanId,it.scanDatetime,it.box,it.PV,it.PW  " +
+            String sql = "SELECT  ts.laneE,it.scanId,it.scanDatetime,it.box,it.PV,it.PW,it.sortCode  " +
                     " from  S11_task as ts  " +
                     " INNER JOIN S11_task_item as it " +
                     " on ts.taskId = it.taskId   " +
@@ -216,7 +216,7 @@ public class UIDao {
                 query.setParameter("carType", carType);
             };
             List<Object[]> list = query.list();
-            result = formatData(list, 6);
+            result = formatData(list, 7);
         } catch (Exception e) {
             log.error(e);
         }
@@ -658,7 +658,7 @@ public class UIDao {
             String str =
                     "select sb.carrierAbbr,sb.laneE,sb.date,sum(sb.num),sum(sb.SV) as SV,sum(sb.SW) as " +
                     "SW,GROUP_CONCAT(sb.carType) as ScarType,GROUP_CONCAT(sb.carNumber) as ScarNumber ,sum(sb.WVol) " +
-                    "as WVol ,concat(left (sum(sb.SV)/ sum(WVol)*100,6),'%') as loadRate from " +
+                    "as WVol ,concat(left (sum(sb.SV)/ sum(WVol)*100,6),'%') as loadRate ,count(sb.carrierAbbr)  from " +
                     "(select tb.carrierAbbr,tb.laneE,date_format(tb.creDate,'%Y-%m-%d') as " +
                     "date,count(S11_task_item.scanId) as num,sum(S11_task_item.PV) as SV,sum(S11_task_item.PW) " +
                     "as SW, tb.carType as carType ,tb.carNumber as carNumber,tb.waterVol as WVol "+
@@ -683,7 +683,7 @@ public class UIDao {
             query.setParameter("dateTo", dateTo);
 
             List<Object[]> list = query.list();
-            result = formatData(list, 10);
+            result = formatData(list, 11);
         } catch (Exception e) {
             log.error(e);
         }

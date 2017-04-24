@@ -177,8 +177,10 @@ public class UIController {
         }
         log.debug(message);
         for (String[] st : res) {
+            st[10] = DataOperation.getNum(st[6],st[7]);
             st[6] = DataOperation.MergeCarType(st[6]);
             st[7] = DataOperation.MergeCarNum(st[7]);
+
         }
 //        log.debug(res.get(0).toString());
         log.debug("getLoadingRateByConditions is completed ");

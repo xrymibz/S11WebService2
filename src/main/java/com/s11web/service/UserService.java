@@ -4,13 +4,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 
 import com.s11web.dao.UserDao;
 import com.s11web.model.User;
+import org.springframework.stereotype.Service;
 
-@Component("userService")
+@Service("userService")
 public class UserService {
+
 
 
     @Autowired

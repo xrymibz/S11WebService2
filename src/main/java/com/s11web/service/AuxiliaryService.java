@@ -3,7 +3,7 @@ package com.s11web.service;
 import com.s11web.dao.AuxiliaryDao;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by xietian
  * 2017/4/18.
  */
-@Repository
+@Service
 public class AuxiliaryService {
     private static final Logger log = Logger.getLogger(AuxiliaryService.class);
     @Autowired

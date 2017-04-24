@@ -7,11 +7,12 @@ import com.s11web.util.DecimalConversion;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service
 public class BarcodeGenerateService {
 
     @Autowired

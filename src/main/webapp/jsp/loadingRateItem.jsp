@@ -28,7 +28,6 @@
                             <th style='text-align:center'>taskID</th>
 							<th style='text-align:center'>运输商</th>
 							<th style='text-align:center'>laneE</th>
-							<th style='text-align:center'>Sort Code</th>
 							<th style='text-align:center'>数量</th>
 							<th style='text-align:center'>操作时间</th>
 							</tr>
@@ -56,6 +55,7 @@
 								<th style='text-align:center'>箱型</th>
 								<th style='text-align:center'>体积</th>
 								<th style='text-align:center'>重量</th>
+                                <th style='text-align:center'>Sort Code</th>
 							</tr>
 						</thead>
 						<tbody></tbody>
@@ -114,7 +114,6 @@
                     "<td class='TaskID'>" + data[i][0] + "</td>" +
                     "<td class='Carrier'>" + data[i][1] + "</td>" +
                     "<td class='LaneE'>" + data[i][2] + "</td>" +
-                    "<td class='SortCode'>" + data[i][3] + "</td>" +
                     "<td class='ScanNum'>" + data[i][4] + "</td>" +
                     "<td class='CreDate'>" + data[i][5] + "</td>" +
 						"</tr>";
@@ -132,6 +131,7 @@
                     "<td class='Box_Item'>" + data[i][3] + "</td>" +
                     "<td class='Vol_Item'>" + data[i][4] + "</td>" +
                     "<td class='Wei_Item'>" + data[i][5] + "</td>" +
+                    "<td class='SortCode_Item'>" + data[i][6] + "</td>" +
                     "</tr>";
 			}
 			tabTaskItem.find("tbody").html("");

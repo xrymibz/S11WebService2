@@ -29,9 +29,10 @@ import org.springframework.stereotype.Component;
 
 import com.s11web.util.ExcelOperator;
 import com.s11web.dao.UIDao;
+import org.springframework.stereotype.Service;
 
 
-@Component("uiService")
+@Service("uiService")
 public class UIService {
 
     @Autowired
