@@ -97,7 +97,7 @@ public class InterfaceService {
         s11_task.setLaneName(s11TaskJson.getString("laneName"));
         s11_task.setCarrierAbbr(s11TaskJson.getString("carrierAbbr"));
         s11_task.setTaskId(s11TaskJson.getString("taskId"));
-        if(s11TaskJson.getString("scanType")==null){
+        if(s11TaskJson.get("scanType")==null){
             s11_task.setScanType("out");
         }else {
             s11_task.setScanType(s11TaskJson.getString("scanType"));

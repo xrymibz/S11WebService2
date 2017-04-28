@@ -60,7 +60,8 @@ public class UIController {
                                  @RequestParam("operateDate") String operateDate) {
 
         ModelAndView mav = new ModelAndView("jsp/taskItem");
-        mav.addObject("laneE", laneE);
+        log.debug("laneE   :" + DataOperation.decode(laneE));
+        mav.addObject("laneE", DataOperation.decode(laneE));
         mav.addObject("arcName", arcName);
         mav.addObject("cargoType", cargoType);
         mav.addObject("operateDate", operateDate);

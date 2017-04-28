@@ -31,6 +31,8 @@ import com.s11web.util.Md5Util;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @Controller
 @RequestMapping("/interface")
@@ -121,7 +123,7 @@ public class InterfaceController {
                                      @RequestParam String arcType,
                                      @RequestParam String laneE,
                                      @RequestParam String time,
-                                     @RequestParam String scanType) {
+                                     HttpServletRequest request) {
 
         String getCompareListMethod = "getCompareList";
         boolean flag = false;
@@ -129,6 +131,7 @@ public class InterfaceController {
         HashSet<String> toBeScanedIdSet = new HashSet<>();
         HashSet<String> scanedIdSet = new HashSet<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String scanType  = request.getParameter("scanType");
         if(scanType==null||!scanType.equals("in")){
             scanType = "out";
         }
