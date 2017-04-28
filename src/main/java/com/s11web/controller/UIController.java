@@ -22,6 +22,7 @@ public class UIController {
 
     private static final Logger log = Logger.getLogger(UIController.class);
 
+
     @Autowired
     private UIService uiService;
 
@@ -39,6 +40,9 @@ public class UIController {
 //        log.debug("jieshu");
 //
 //    }
+
+
+
 
     @ResponseBody
     @RequestMapping(value = "/exceptionQuery")
@@ -62,7 +66,6 @@ public class UIController {
         mav.addObject("operateDate", operateDate);
         mav.addObject("sortCode", sortCode);
         mav.addObject("count", count);
-
         return mav;
     }
 

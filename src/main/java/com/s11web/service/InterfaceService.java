@@ -221,7 +221,7 @@ public class InterfaceService {
         // 用以保存前序LaneE以及预估时间
         HashMap<String, String> result = new HashMap<>();
         String currentLaneStartFc = splitLaneE(currentLaneE)[0];
-        // Lane的起始与Arc起始重合
+        // Lane的起始与Arc起始重合，当前的currentLaneE是第一条路径
         if (currentLaneStartFc.contains(arcSourceFc)) {
             result.put("LaneE", currentLaneE);
             return result;
@@ -229,18 +229,25 @@ public class InterfaceService {
         // Lane不是Arc的起始
         for (Lane laneInfo : LanesInArcList) {
             String laneEndFc = splitLaneE(laneInfo.getLaneE())[1];
-            if (isLaneFcMatched(currentLaneStartFc, laneEndFc)) {
+            if (isLaneFcMatched(currentLaneStartFc, laneEndFc)) {   //当前的开始是哪一条的结束，找到了之后，就能知道上一条的开始
                 result.put("LaneE", laneInfo.getLaneE());
                 String departDateStr = String.format("%s %s", (new SimpleDateFormat("yyyy-MM-dd")).format(currentTime), laneInfo.getDepartTime());
                 try {
                     long departDate = dateFormat.parse(departDateStr).getTime();
+ //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
                     departDate += laneInfo.getDeliveryDuration() * 60 * 60 * 1000;
+ //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
                     while (departDate >= currentTime.getTime())
                         departDate -= 24 * 60 * 60 * 1000;
+ //                   log.debug("currentTime.getTime()" + dateFormat.format(new Date(currentTime.getTime())));
+ //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
                     departDate = departDate - laneInfo.getDeliveryDuration() * 60 * 60 * 1000 + delayInterval;
-
+  //                  log.debug("departDate" + dateFormat.format(new Date(departDate)));
                     result.put("rightTime", dateFormat.format(new Date(departDate)));
                     result.put("leftTime", dateFormat.format(new Date(departDate - scanInterval)));
+
+ //                   log.debug("leftTime" + dateFormat.format(new Date(departDate - scanInterval)));
+ //                   log.debug("rightTime" + dateFormat.format(new Date(departDate)));
                 } catch (ParseException e) {
                     log.info("Time Parse Exception", e);
                 }

@@ -159,7 +159,7 @@ public class InterfaceController {
                                 previousLaneInfo.get("LaneE"), sourceFc, destinationFc, arcType, previousLaneInfo.get("leftTime"), previousLaneInfo.get("rightTime"));
                         log.debug(String.format("共获取%d条前序条码记录!", toBeScanedIdSet.size()));
                     }
-                    // 对于没有获取到时间区间信息的LaneE, 只获取当前LaneE下已经上传的条码信息
+                    // 对于没有获取到时间区间信息的LaneE, 只获取当前LaneE下已经上传的条码信息（三个小时之内扫描的）
                     String rightTime = dateFormat.format(currentTime);
                     String leftTime = dateFormat.format((new Date(currentTime.getTime() - CheckDuplicationTimeInterval)));
                     scanedIdSet = this.interfaceService.getScanList(
