@@ -60,6 +60,9 @@ public class S11Task {
 	@Getter @Setter
 	private double waterVol;
 
+	@Getter @Setter
+	private String scanType;
+
 	public int getId() {
 		return id;
 	}
@@ -170,5 +173,13 @@ public class S11Task {
 
 	public void setWaterVol(double waterVol) {
 		this.waterVol = waterVol;
+	}
+
+	public String getScanType() {
+		return scanType;
+	}
+
+	public void setScanType(String scanType) {
+		this.scanType = scanType;
 	}
 }

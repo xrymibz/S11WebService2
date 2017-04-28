@@ -97,7 +97,12 @@ public class InterfaceService {
         s11_task.setLaneName(s11TaskJson.getString("laneName"));
         s11_task.setCarrierAbbr(s11TaskJson.getString("carrierAbbr"));
         s11_task.setTaskId(s11TaskJson.getString("taskId"));
-        if(s11TaskJson.get("carType")!=null){
+        if(s11TaskJson.getString("scanType")==null){
+            s11_task.setScanType("out");
+        }else {
+            s11_task.setScanType(s11TaskJson.getString("scanType"));
+        }
+        if(s11TaskJson.getString("carType")!=null&&s11TaskJson.getString("carType").length()!=0){
             s11_task.setCarType(s11TaskJson.getString("carType"));
             double WaterVol = getWaterVolbyCarType(s11TaskJson.getString("carType"));
 //            log.debug(WaterVol+"WaterVol");
@@ -147,8 +152,9 @@ public class InterfaceService {
                                        String destinationFc,
                                        String arcType,
                                        String leftTime,
-                                       String rightTime) {
-        return interfaceDao.getScanList(LaneE, sourceFc, destinationFc, arcType, leftTime, rightTime);
+                                       String rightTime,
+                                       String scanType) {
+        return interfaceDao.getScanList(LaneE, sourceFc, destinationFc, arcType, leftTime, rightTime,scanType);
     }
 
     /**
@@ -211,7 +217,7 @@ public class InterfaceService {
      * @param LanesInArcList
      * @return 前序的LaneE 以及 预估时间
      */
-    public HashMap<String, String> getPreviousLaneInfo(String currentLaneE, List<Lane> LanesInArcList, String arcSourceFc, Date currentTime) {
+    public HashMap<String, String> getPreviousLaneInfo(String currentLaneE, List<Lane> LanesInArcList, String arcSourceFc, Date currentTime,String scanType) {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         // 设定与原定出发时间2小时误差内可获取
@@ -220,6 +226,14 @@ public class InterfaceService {
         long scanInterval = 24 * 60 * 60 * 1000;
         // 用以保存前序LaneE以及预估时间
         HashMap<String, String> result = new HashMap<>();
+
+        //入庫掃描
+        if(scanType.equals("in")){
+            result = proceedLaneInfo(LanesInArcList.get(LanesInArcList.size()-1),currentTime,dateFormat,delayInterval,scanInterval);
+            return result;
+        }
+
+
         String currentLaneStartFc = splitLaneE(currentLaneE)[0];
         // Lane的起始与Arc起始重合，当前的currentLaneE是第一条路径
         if (currentLaneStartFc.contains(arcSourceFc)) {
@@ -230,33 +244,38 @@ public class InterfaceService {
         for (Lane laneInfo : LanesInArcList) {
             String laneEndFc = splitLaneE(laneInfo.getLaneE())[1];
             if (isLaneFcMatched(currentLaneStartFc, laneEndFc)) {   //当前的开始是哪一条的结束，找到了之后，就能知道上一条的开始
-                result.put("LaneE", laneInfo.getLaneE());
-                String departDateStr = String.format("%s %s", (new SimpleDateFormat("yyyy-MM-dd")).format(currentTime), laneInfo.getDepartTime());
-                try {
-                    long departDate = dateFormat.parse(departDateStr).getTime();
- //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
-                    departDate += laneInfo.getDeliveryDuration() * 60 * 60 * 1000;
- //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
-                    while (departDate >= currentTime.getTime())
-                        departDate -= 24 * 60 * 60 * 1000;
- //                   log.debug("currentTime.getTime()" + dateFormat.format(new Date(currentTime.getTime())));
- //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
-                    departDate = departDate - laneInfo.getDeliveryDuration() * 60 * 60 * 1000 + delayInterval;
-  //                  log.debug("departDate" + dateFormat.format(new Date(departDate)));
-                    result.put("rightTime", dateFormat.format(new Date(departDate)));
-                    result.put("leftTime", dateFormat.format(new Date(departDate - scanInterval)));
-
- //                   log.debug("leftTime" + dateFormat.format(new Date(departDate - scanInterval)));
- //                   log.debug("rightTime" + dateFormat.format(new Date(departDate)));
-                } catch (ParseException e) {
-                    log.info("Time Parse Exception", e);
-                }
+                result = proceedLaneInfo(laneInfo,currentTime,dateFormat,delayInterval,scanInterval);
                 break;
             }
         }
         return result;
     }
 
+    private  HashMap<String, String> proceedLaneInfo( Lane laneInfo,Date currentTime,SimpleDateFormat dateFormat,long delayInterval,long scanInterval){
+        HashMap<String, String> result = new HashMap<>();
+        result.put("LaneE", laneInfo.getLaneE());
+        String departDateStr = String.format("%s %s", (new SimpleDateFormat("yyyy-MM-dd")).format(currentTime), laneInfo.getDepartTime());
+        try {
+            long departDate = dateFormat.parse(departDateStr).getTime();
+            //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
+            departDate += laneInfo.getDeliveryDuration() * 60 * 60 * 1000;
+            //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
+            while (departDate >= currentTime.getTime())
+                departDate -= 24 * 60 * 60 * 1000;
+            //                   log.debug("currentTime.getTime()" + dateFormat.format(new Date(currentTime.getTime())));
+            //                   log.debug("departDate" + dateFormat.format(new Date(departDate)));
+            departDate = departDate - laneInfo.getDeliveryDuration() * 60 * 60 * 1000 + delayInterval;
+            //                  log.debug("departDate" + dateFormat.format(new Date(departDate)));
+            result.put("rightTime", dateFormat.format(new Date(departDate)));
+            result.put("leftTime", dateFormat.format(new Date(departDate - scanInterval)));
+
+            //                   log.debug("leftTime" + dateFormat.format(new Date(departDate - scanInterval)));
+            //                   log.debug("rightTime" + dateFormat.format(new Date(departDate)));
+        } catch (ParseException e) {
+            log.info("Time Parse Exception", e);
+        }
+        return result;
+    }
     /**
      * 根据现有业务情况切分LaneE,得到起始和终止FC信息
      *

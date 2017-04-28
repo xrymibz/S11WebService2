@@ -288,5 +288,15 @@ public class UIController {
         return mav;
     }
 
+    @RequestMapping(value = "/warehousing")
+    @ResponseBody
+    public ModelAndView warehousing() {
+        return new ModelAndView("jsp/warehousing");
+    }
 
+    @RequestMapping(value = "/warehousingItem")
+    @ResponseBody
+    public ModelAndView warehousingItem() {
+        return new ModelAndView("jsp/warehousingItem");
+    }
 }

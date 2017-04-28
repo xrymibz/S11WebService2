@@ -56,10 +56,11 @@ public class InterfaceDao {
                                        String destinationFc,
                                        String arcType,
                                        String leftTime,
-                                       String rightTime) {
+                                       String rightTime,
+                                       String scanType) {
         Session session = sessionFactory.getCurrentSession();
         String sql = "select scanId from S11_task_item as taskItem, (SELECT taskId FROM S11_task where laneE = :LaneE and source = :sourceFc" +
-                " and destination = :destinationFc and cargoType = :arcType and creDate > :leftTime and creDate < :rightTime ) as task " +
+                " and destination = :destinationFc and cargoType = :arcType and creDate > :leftTime and creDate < :rightTime and scanType = :scanType) as task " +
                 "where taskItem.taskId = task.taskId";
         Query query = session.createSQLQuery(sql);
         query.setParameter("LaneE", LaneE);
@@ -68,6 +69,7 @@ public class InterfaceDao {
         query.setParameter("arcType", arcType);
         query.setParameter("leftTime", leftTime);
         query.setParameter("rightTime", rightTime);
+        query.setParameter("scanType", scanType);
         log.info(String.format("%s	%s	%s	%s	%s	%s", LaneE, sourceFc, destinationFc, arcType, leftTime, rightTime));
 
         HashSet<String> result = new HashSet<>();

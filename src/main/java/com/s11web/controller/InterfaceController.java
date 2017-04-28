@@ -120,7 +120,8 @@ public class InterfaceController {
                                      @RequestParam String destinationFc,
                                      @RequestParam String arcType,
                                      @RequestParam String laneE,
-                                     @RequestParam String time) {
+                                     @RequestParam String time,
+                                     @RequestParam String scanType) {
 
         String getCompareListMethod = "getCompareList";
         boolean flag = false;
@@ -128,6 +129,10 @@ public class InterfaceController {
         HashSet<String> toBeScanedIdSet = new HashSet<>();
         HashSet<String> scanedIdSet = new HashSet<>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        if(scanType==null||!scanType.equals("in")){
+            scanType = "out";
+        }
+        log.debug("scanType :" +scanType);
 
         long CheckDuplicationTimeInterval = 3 * 60 * 60 * 1000; // 目前设定查重时间范围为三个小时以内
 
@@ -145,25 +150,25 @@ public class InterfaceController {
                 String rightTime = dateFormat.format(currentTime);
                 String leftTime = dateFormat.format((new Date(currentTime.getTime() - CheckDuplicationTimeInterval)));
                 scanedIdSet = this.interfaceService.getScanList(
-                        laneE, sourceFc, destinationFc, arcType, leftTime, rightTime);
+                        laneE, sourceFc, destinationFc, arcType, leftTime, rightTime,"out");
                 message = "获取条码清单成功!";
             }else{
                 List<Lane> LanesInArcList = this.interfaceService.getLaneInfoByArc(sourceFc, destinationFc, arcType);
-                HashMap<String, String> previousLaneInfo = this.interfaceService.getPreviousLaneInfo(laneE, LanesInArcList, sourceFc, currentTime);
+                HashMap<String, String> previousLaneInfo = this.interfaceService.getPreviousLaneInfo(laneE, LanesInArcList, sourceFc, currentTime,scanType);
 
                 // 判断是否有前序LaneE信息
                 if (previousLaneInfo.containsKey("LaneE")) {
                     // 判断是否有时间区间信息
                     if (previousLaneInfo.containsKey("rightTime") && previousLaneInfo.containsKey("leftTime")) {
                         toBeScanedIdSet = this.interfaceService.getScanList(
-                                previousLaneInfo.get("LaneE"), sourceFc, destinationFc, arcType, previousLaneInfo.get("leftTime"), previousLaneInfo.get("rightTime"));
+                                previousLaneInfo.get("LaneE"), sourceFc, destinationFc, arcType, previousLaneInfo.get("leftTime"), previousLaneInfo.get("rightTime"),"out");
                         log.debug(String.format("共获取%d条前序条码记录!", toBeScanedIdSet.size()));
                     }
                     // 对于没有获取到时间区间信息的LaneE, 只获取当前LaneE下已经上传的条码信息（三个小时之内扫描的）
                     String rightTime = dateFormat.format(currentTime);
                     String leftTime = dateFormat.format((new Date(currentTime.getTime() - CheckDuplicationTimeInterval)));
                     scanedIdSet = this.interfaceService.getScanList(
-                            laneE, sourceFc, destinationFc, arcType, leftTime, rightTime);
+                            laneE, sourceFc, destinationFc, arcType, leftTime, rightTime,scanType);
                     //           log.debug(String.format("共获取%d条重复条码记录!", scanedIdSet.size()));
 
                     for (String scanId : scanedIdSet) if (toBeScanedIdSet.contains(scanId)) toBeScanedIdSet.remove(scanId);
