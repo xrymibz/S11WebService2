@@ -82,6 +82,7 @@ function getBeforeDate(days) {
     return year + "-" + month + "-" + date +" "+ hour + ":" + minute;
 }
 
+
 function getCountByCondition(basePath, formData){
 
     var resultData = [];
@@ -98,6 +99,27 @@ function getCountByCondition(basePath, formData){
         },
         error: function(XMLHttpRequest, textStatus) {
             console.log("getCountByConditions   " + XMLHttpRequest.status);
+        }
+    });
+    return resultData;
+}
+
+function getWareHousing(basePath, formData){
+
+    var resultData = [];
+
+    $.ajax({
+        type:"POST",
+        url:basePath + "getWareHousingByCondition",
+        async : false,
+        timeout : 5000,
+        data : "data=" + formData,
+        dataType : "json",
+        success: function(data){
+            resultData = data.data;
+        },
+        error: function(XMLHttpRequest, textStatus) {
+            console.log("getWareHousingByCondition   " + XMLHttpRequest.status);
         }
     });
     return resultData;
@@ -145,6 +167,9 @@ function getLoadingRateOfChildren(basePath, formData){
     });
     return resultData;
 }
+
+
+
 
 
 function downloadFile(url, formData) {

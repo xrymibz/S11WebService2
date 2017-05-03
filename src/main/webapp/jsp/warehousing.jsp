@@ -263,18 +263,17 @@
         }
         var fromDateVal = $.trim(fromDate.val());
         var toDateVal = $.trim(toDate.val());
-        formdata.laneList = laneSelected;
         formdata.carriers = carriers;
         formdata.fromDate = fromDateVal;
         formdata.toDate = toDateVal;
         formdata.arcList = arcSelected;
-        formdata.cargoTypeList = cargoSelected;
 
 
         formData = $.toJSON(formdata);
         console.log("formdata : " + formdata);
 
-        showTaskInfo( getCountByCondition(basePath, formData) );
+        //showTaskInfo(getWareHousing(basePath, formData));
+        showTaskInfo(getWareHousing(basePath, formData));
     });
 
     btnDownload.click(function(){
@@ -384,6 +383,28 @@
             }
         });
     }
+
+    function getWareHousing(basePath, formData){
+
+        var resultData = [];
+
+        $.ajax({
+            type:"POST",
+            url:basePath + "getWareHousingByCondition",
+            async : false,
+            timeout : 5000,
+            data : "data=" + formData,
+            dataType : "json",
+            success: function(data){
+                resultData = data.data;
+            },
+            error: function(XMLHttpRequest, textStatus) {
+                console.log("getWareHousingByCondition   " + XMLHttpRequest.status);
+            }
+        });
+        return resultData;
+    }
+
 
     btnQuery.trigger("click");
 

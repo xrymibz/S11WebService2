@@ -254,6 +254,49 @@ public class UIController {
 
     }
 
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "/getWareHousingByCondition")
+    public JsonResult getWareHousingByCondition(@ModelAttribute("data") String s) {
+
+
+        log.debug("getWareHousingByCondition is running " + s);
+        boolean flag;
+        String message;
+        List<String[]> res = uiService.getWareHousingByCondition(s);
+        if (Objects.nonNull(res)) {
+            if(res!=null&&res.size()>0){
+                for(String[]item : res){
+                    for(String i:item){
+                        log.debug(i);
+                    }
+                    String[]temp = uiService.getWareHousingInfobyOutOfFC(item[0],item[1],item[5]);
+                    item[7] = temp[1];
+                    item[8] = temp[0];
+                    log.debug( item[8]);
+                    log.debug( item[6]);
+                    item[9] = Integer.parseInt(item[8])/Integer.parseInt(item[6])+"";
+                    for(String i:item){
+                        log.debug(i);
+                    }
+                }
+            }
+            flag = true;
+            message = "getWareHousingByCondition info success!";
+        } else {
+            flag = false;
+            message = "get count info error!";
+        }
+        log.debug(message);
+
+//        log.debug(res.get(0).toString());
+        log.debug("getWareHousingByCondition is completed ");
+        return new JsonResult<>(flag, message, res);
+    }
+
+
     @RequestMapping(value = "/barcodeGenerate")
     @ResponseBody
     public ModelAndView barcodeGenerate() {

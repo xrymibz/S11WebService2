@@ -571,11 +571,12 @@ public class UIDao {
     }
 
     private List<String[]> formatData(List<Object[]> result, int len) {
+        log.debug("formatData is START");
         List<String[]> res = new ArrayList<>();
         for (Object[] obj : result) {
             String[] s = new String[len];
             for (int i = 0; i < len; ++i)
-                s[i] = obj[i] == null ? "" : obj[i].toString();
+                s[i] = (i<obj.length&&obj[i]!=null) ? obj[i].toString():"";
             res.add(s);
         }
         log.debug("formatData is finished");
@@ -690,6 +691,43 @@ public class UIDao {
         return result;
     }
 
+    public List<String[]> getWareHousingByCondition(JSONArray carrierSelected,
+                                                     JSONArray arcList,
+                                                     String dateFrom,
+                                                     String dateTo) {
+
+        List<String[]> result = new ArrayList<>();
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            String str =
+                    "select  carrierAbbr,CONCAT(source,'-',destination) as Arc, source ," +
+                            " destination,cargoType,date_format(task.creDate,'%Y-%m-%d') as OutCreDate,  " +
+                            " count(item.scanId) as OutNum    from S11_task as task  " +
+                            " INNER JOIN S11_task_item as item on task.taskId = item.taskId   " +
+                            " where SUBSTR(task.laneE,1,locate(\"-\",task.laneE)-1)  = task.source" +
+                            " and cargoType = \"Transfer\"  " +
+                            " and carrierAbbr in :carrierSelected "+
+                            (arcList.size() > 0 ?
+                                    (" and concat(source,'-',destination) in :arcList ") : "") +
+                            " and task.creDate >= :dateFrom" +
+                            " and task.creDate <= :dateTo" +
+                            " GROUP BY Arc,OutCreDate";
+
+            Query query = session.createSQLQuery(str);
+            query.setParameterList("carrierSelected", carrierSelected);
+            if (arcList.size() > 0) query.setParameterList("laneSelected", arcList);
+            query.setParameter("dateFrom", dateFrom);
+            query.setParameter("dateTo", dateTo);
+
+            List<Object[]> list = query.list();
+            result = formatData(list, 10);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return result;
+    }
+
+
 
 
     public List<String[]> getLoadingRateOfChildren(String carrier,
@@ -725,4 +763,64 @@ public class UIDao {
         }
         return result;
     }
+
+
+    public List<String> getTaskIdbyOutOfFC(String carrier,
+                                           String arc,
+                                           String creDate ){
+        List<String> result = new ArrayList<>();
+        try {
+            log.debug(carrier + arc + creDate);
+            Session session = sessionFactory.getCurrentSession();
+
+            String str =
+                    "select taskId from S11_task where taskId in (" +
+                            " select taskId  from S11_task_item  where  scanId in (" +
+                            " select item.scanId from S11_task_item as item where item.taskId in " +
+                            " (select task.taskId from S11_task as task where  task.carrierAbbr = :carrier" +
+                            " and date_format(task.creDate,'%Y-%m-%d') = :creDate and CONCAT(task.source,'-',task.destination) = :arc" +
+                            ")" +
+                            ")" +
+                            ") and scanType = 'in'";
+
+            Query query = session.createSQLQuery(str);
+            query.setParameter("carrier", carrier);
+            query.setParameter("arc", arc);
+            query.setParameter("creDate", creDate);
+            List<Object> list = query.list();
+            for(Object item : list){
+                result.add(item.toString());
+            }
+        }catch (Exception e){
+            log.error(e);
+        }
+        return result;
+    }
+
+    public String[] getScanIDbyTaskId(JSONArray taskId ){
+        String[] result = new  String[2];
+        try {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            String str =
+                    "select DISTINCT count(scanId),DATE_FORMAT(item.scanDatetime,'%Y-%m-%d') from S11_task_item as item where taskId in :taskId";
+
+            Query query = session.createSQLQuery(str);
+            query.setParameterList("taskId", taskId);
+
+            List<Object[]>list = query.list();
+            if(list==null||list.size()==0){
+                result[0] = "-";
+                result[1] = "0";
+            }else{
+                result[0] = list.get(0)[0].toString();
+                result[1] = list.get(0)[1].toString();
+            }
+        }catch (Exception e){
+            log.error(e);
+        }
+        return result;
+    }
+
 }

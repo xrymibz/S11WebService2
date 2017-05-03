@@ -18,7 +18,7 @@
         <br>
         <div class="panel panel-default">
             <div class="panel-heading" style = "text-align:left;font-size:16px">
-                <b>Task Items:</b>
+                <b>Task Items:  出库数量：4 ， 入库数量2 </b>
             </div>
         </div>
         <div style = "margin-left:90%">

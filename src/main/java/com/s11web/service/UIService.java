@@ -126,6 +126,40 @@ public class UIService {
     }
 
 
+    public List<String[]> getWareHousingByCondition(String inputJsonStr) {
+        try {
+            log.debug("uiService.getWareHousingByCondition is running :" + inputJsonStr);
+            JSONObject data = JSONObject.fromObject(inputJsonStr);
+            String dateFrom = data.getString("fromDate");
+            log.debug("dateFrom : " + dateFrom);
+            String dateTo = data.getString("toDate");
+            JSONArray carriers = data.getJSONArray("carriers");
+            JSONArray arcList = data.getJSONArray("arcList");
+            log.debug("the carrier is :" + carriers);
+            return uiDao.getWareHousingByCondition(carriers, arcList, dateFrom, dateTo);
+        } catch (Exception e) {
+            log.info("error when get count", e);
+
+            return null;
+        }
+    }
+
+
+    public String[] getWareHousingInfobyOutOfFC(String carrier,String arc,String creDate){
+       try {
+           log.debug("getWareHousingInfobyOutOfFC is starting");
+           List<String> taskId = uiDao.getTaskIdbyOutOfFC(carrier, arc, creDate);
+           log.debug(  taskId+"   the taskID jsonarray is :" + JSONArray.fromObject(taskId));
+           String[] res = uiDao.getScanIDbyTaskId(JSONArray.fromObject(taskId));
+           log.debug("getWareHousingInfobyOutOfFC is finished");
+           return res;
+       }catch (Exception e ){
+           log.error(e);
+           return null;
+       }
+    }
+
+
     public List<String[]> getLoadingRateCount(String inputJsonStr) {
         try {
             JSONObject data = JSONObject.fromObject(inputJsonStr);
