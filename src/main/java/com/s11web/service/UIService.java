@@ -143,15 +143,60 @@ public class UIService {
             return null;
         }
     }
+    public List<String[]> getWarehousingItem(String inputJsonStr) {
+        try {
+            log.debug("uiService.getWarehousingItem is running :" + inputJsonStr);
+            JSONObject data = JSONObject.fromObject(inputJsonStr);
+
+            String carrierName = data.getString("carrierName");
+            String cargoesType = data.getString("cargoesType");
+            String arc = data.getString("arc");
+            String departureDate = data.getString("departureDate");
+            log.debug("the carrier is :" + carrierName);
+            return uiDao.getWarehousingItem(carrierName, cargoesType, arc, departureDate);
+        } catch (Exception e) {
+            log.info("error when get count", e);
+
+            return null;
+        }
+    }
+
 
 
     public String[] getWareHousingInfobyOutOfFC(String carrier,String arc,String creDate){
        try {
+           String[]res = new String[2];
+           SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+           //发货当天前后两天内的扫描记录
+           log.debug("get interval date  :"  +creDate);
+           Date date = sdf.parse(creDate);
+           String FromDate = sdf.format(new Date(date.getTime() - (long)2 * 24 * 60 * 60 * 1000));
+           String toDate = sdf.format(new Date(date.getTime() + (long)2 * 24 * 60 * 60 * 1000));
            log.debug("getWareHousingInfobyOutOfFC is starting");
-           List<String> taskId = uiDao.getTaskIdbyOutOfFC(carrier, arc, creDate);
-           log.debug(  taskId+"   the taskID jsonarray is :" + JSONArray.fromObject(taskId));
-           String[] res = uiDao.getScanIDbyTaskId(JSONArray.fromObject(taskId));
+           //获得当天所有的扫描ID
+           List<String> OutOfFCScanId = uiDao.getScanIdbyOutOfFC(carrier, arc, creDate);
+           //获得前后五天内所有的扫描ID
+ //          List<String> IntervalOutOfFCScanId = uiDao.getIntervalScanIdbyOutOfFC(carrier, arc, FromDate,toDate);
+            //获得入库的所有的taskID
+           List<String>taskId = uiDao.getTaskIdInOfFCbyScanId( JSONArray.fromObject(OutOfFCScanId),creDate);
+           List<String> InOfFCScanId = new ArrayList<>();
+           if(taskId!=null&&taskId.size()!=0) {
+               InOfFCScanId = uiDao.getScanIDbyTaskId(JSONArray.fromObject(taskId),creDate);
+           }
            log.debug("getWareHousingInfobyOutOfFC is finished");
+
+            if(InOfFCScanId==null ||InOfFCScanId.size() ==0) //如果货物没有入库
+            {
+                res[0] = "-";
+                res[1] = "0";
+            }else{
+                List<String>InOfFCDate = uiDao.getDatebyTaskId(JSONArray.fromObject(taskId));
+                res[0] = InOfFCDate.get(0);
+                res[1] = InOfFCDate.size()+"";
+                //关掉查询漏件        res[1] = getNumByScanId(OutOfFCScanId,IntervalOutOfFCScanId,InOfFCScanId) +"";
+                res[1] = getNumByScanId(OutOfFCScanId,InOfFCScanId) +"";
+            }
+
            return res;
        }catch (Exception e ){
            log.error(e);
@@ -159,6 +204,17 @@ public class UIService {
        }
     }
 
+    //关掉查询漏件
+    public int getNumByScanId(List<String>outFC,List<String>inFC){
+        int num = 0;
+        for(String i:inFC){
+ //           if(outFC.contains(i)||!intervalOutFC.contains(i)){
+            if(outFC.contains(i)){
+                num++;
+            }
+        }
+        return num;
+    }
 
     public List<String[]> getLoadingRateCount(String inputJsonStr) {
         try {

@@ -265,6 +265,8 @@ function getTaskItem(basePath, formData){
     return resultData;
 }
 
+
+
 function getLoadingRateCount(basePath, formData) {
     var resultData = [];
 

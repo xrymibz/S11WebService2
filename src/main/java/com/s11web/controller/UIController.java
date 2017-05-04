@@ -1,6 +1,7 @@
 package com.s11web.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.text.NumberFormat;
 import java.util.*;
 
 import com.s11web.util.DataOperation;
@@ -267,22 +268,6 @@ public class UIController {
         String message;
         List<String[]> res = uiService.getWareHousingByCondition(s);
         if (Objects.nonNull(res)) {
-            if(res!=null&&res.size()>0){
-                for(String[]item : res){
-                    for(String i:item){
-                        log.debug(i);
-                    }
-                    String[]temp = uiService.getWareHousingInfobyOutOfFC(item[0],item[1],item[5]);
-                    item[7] = temp[1];
-                    item[8] = temp[0];
-                    log.debug( item[8]);
-                    log.debug( item[6]);
-                    item[9] = Integer.parseInt(item[8])/Integer.parseInt(item[6])+"";
-                    for(String i:item){
-                        log.debug(i);
-                    }
-                }
-            }
             flag = true;
             message = "getWareHousingByCondition info success!";
         } else {
@@ -292,6 +277,43 @@ public class UIController {
         log.debug(message);
 
 //        log.debug(res.get(0).toString());
+        log.debug("getWareHousingByCondition is completed ");
+        return new JsonResult<>(flag, message, res);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getWarehousingItem")
+    public JsonResult getWarehousingItem(@ModelAttribute("data") String s) {
+
+
+        log.debug("getWarehousingItem is running " + s);
+        boolean flag;
+        String message;
+        List<String[]> res = uiService.getWarehousingItem(s);
+        if (Objects.nonNull(res)) {
+
+            flag = true;
+            message = "getWareHousingByCondition info success!";
+        } else {
+            flag = false;
+            message = "get count info error!";
+        }
+        log.debug(message);
+
+        for(String[]item:res){
+            String[]Dates = item[1].split(",");
+            if(Dates==null||Dates.length==0){
+                item[1] = "-";
+                item[2] = "-";
+            }else if(Dates.length==1){
+                item[1] = Dates[0];
+                item[2] = "-";
+            }else{
+                item[1] = Dates[0];
+                item[2] = Dates[Dates.length-1];
+            }
+            log.debug(item[0] +  item[1] +  item[2]);
+        }
         log.debug("getWareHousingByCondition is completed ");
         return new JsonResult<>(flag, message, res);
     }
@@ -340,7 +362,17 @@ public class UIController {
 
     @RequestMapping(value = "/warehousingItem")
     @ResponseBody
-    public ModelAndView warehousingItem() {
-        return new ModelAndView("jsp/warehousingItem");
+    public ModelAndView warehousingItem(@RequestParam("carrierName") String carrierName,
+                                        @RequestParam("cargoesType") String cargoesType,
+                                        @RequestParam("arc") String arc,
+                                        @RequestParam("departureDate") String departureDate,
+                                        @RequestParam("destinationDate") String destinationDate) {
+        ModelAndView mav =  new ModelAndView("jsp/warehousingItem");
+        mav.addObject("carrierName", carrierName);
+        mav.addObject("cargoesType", cargoesType);
+        mav.addObject("arc", DataOperation.decode(arc));
+        mav.addObject("departureDate", DataOperation.decode(departureDate));
+        mav.addObject("destinationDate", destinationDate);
+        return  mav;
     }
 }

@@ -216,6 +216,7 @@
 
     cargoList.multiselect(
         {
+
             includeSelectAllOption : true,
             enableFiltering : true,
             maxHeight : 150,
@@ -272,8 +273,11 @@
         formData = $.toJSON(formdata);
         console.log("formdata : " + formdata);
 
-        //showTaskInfo(getWareHousing(basePath, formData));
-        showTaskInfo(getWareHousing(basePath, formData));
+        if(new Date(toDate.val())-new Date(fromDate.val())>1000*60*60*24*93){
+            alert("时间范围不得超过三个月");
+        }else {
+            showTaskInfo(getWareHousing(basePath, formData));
+        }
     });
 
     btnDownload.click(function(){
@@ -282,27 +286,24 @@
 
     tabTaskInfo.on("click",".StorageRate1",function(){
         console.log("total click");
-//        var tr = $(this).parent().parent();
-//        var taskId = tr.find(".taskId").html();
-//        var laneE = tr.find(".laneE").html();
-//        var arcName = tr.find(".arcName").html();
-//        var cargoType = tr.find(".cargoType").html();
-//        var sortCode = tr.find(".sortCode").html();
-//        var count = tr.find(".count").html();
-//        var operateDate = tr.find(".creDate").html();
+        var tr = $(this).parent().parent();
+        var departureDate = tr.find(".departureDate").html();
+        var arc = tr.find(".arc").html();
+        var destinationDate = tr.find(".destinationDate").html();
+        var cargoesType = tr.find(".cargoesType").html();
+        var carrierName = tr.find(".carrierName").html();
 
-//        window.open(basePath + "warehousingItem?laneE=" + laneE + "&arcName=" + arcName
-//            + "&cargoType=" + cargoType
-//            + "&sortCode=" + sortCode
-//            + "&count=" + count
-//            + "&operateDate=" + operateDate);
+        window.open(basePath + "warehousingItem?carrierName=" + carrierName + "&cargoesType=" + cargoesType
+            + "&arc=" + arc
+            + "&departureDate=" + departureDate
+            + "&destinationDate=" + destinationDate);
 
-        window.open(basePath + "warehousingItem");
     });
 
     function showTaskInfo(data){
         $("#tabTaskInfo thead").html(
             "<tr>\n" +
+            "<th style='text-align:center'>运输商</th>\n" +
             "<th style='text-align:center'>Arc</th>\n" +
             "<th style='text-align:center'>出发库房</th>\n" +
             "<th style='text-align:center'>目的库房</th>\n" +
@@ -318,42 +319,44 @@
         var htmlStr = "";
         console.log(data);
 
-//        for(var i = 0; i <  data.length; i++){
-//            htmlStr = htmlStr +
-//                "<tr><td class='arc'>" + data[i][0] + "</td>" +
-//                "<td class='departure'>" + data[i][1] + "</td>" +
-//                "<td class='destination'>" + data[i][2] + "</td>" +
-//                "<td class='cargoseType'>" + data[i][3] + "</td>" +
-//                "<td class='departureDate'>" + data[i][4] + "</td>" +
-//                "<td class='departureNum'>" + data[i][5] + "</td>" +
-//                "<td class='destinationDate'>" + data[i][6] + "</td>" +
-//                "<td class='destinationNum'>" + data[i][7] + "</td>" +
-//                "<td><a href='javascript:void(0)' class='StorageRate'>" + data[i][9] + "</a></td></tr>";
-//            total += parseInt(data[i][4]);
-//        }
+        for(var i = 0; i <  data.length; i++){
+            htmlStr = htmlStr +
+                "<tr>" +
+                "<td class='carrierName'>" + data[i][0] + "</td>" +
+                "<td class='arc'>" + data[i][1] + "</td>" +
+                "<td class='departure'>" + data[i][2] + "</td>" +
+                "<td class='destination'>" + data[i][3] + "</td>" +
+                "<td class='cargoesType'>" + data[i][4] + "</td>" +
+                "<td class='departureDate'>" + data[i][5] + "</td>" +
+                "<td class='departureNum'>" + data[i][6] + "</td>" +
+                "<td class='destinationDate'>" + data[i][7] + "</td>" +
+                "<td class='destinationNum'>" + data[i][8] + "</td>" +
+                "<td><a href='javascript:void(0)' class='StorageRate1'>" + data[i][9] + "</a></td></tr>";
 
-        htmlStr = htmlStr +
-            "<tr><td class='arc'>" + "CAN4-SHA2" + "</td>" +
-            "<td class='departure'>" + "广州" + "</td>" +
-            "<td class='destination'>" + "昆山" + "</td>" +
-            "<td class='cargoseType'>" + "Transfer" + "</td>" +
-            "<td class='departureDate'>" + "2017-04-26" + "</td>" +
-            "<td class='departureNum'>" + 3 + "</td>" +
-            "<td class='destinationDate'>" + "2017-04-28" + "</td>" +
-            "<td class='destinationNum'>" + 3 + "</td>" +
-            "<td><a href='javascript:void(0)' class='StorageRate1'>" + "100%" + "</a></td></tr>";
+        }
 
-
-        htmlStr = htmlStr +
-            "<tr><td class='arc'>" + "CAN4-SHA2" + "</td>" +
-            "<td class='departure'>" + "广州" + "</td>" +
-            "<td class='destination'>" + "昆山" + "</td>" +
-            "<td class='cargoseType'>" + "Transfer" + "</td>" +
-            "<td class='departureDate'>" + "2017-04-27" + "</td>" +
-            "<td class='departureNum'>" + 4 + "</td>" +
-            "<td class='destinationDate'>" + "2017-04-29" + "</td>" +
-            "<td class='destinationNum'>" + 2 + "</td>" +
-            "<td><a href='javascript:void(0)' class='StorageRate1'>" + "50%" + "</a></td></tr>";
+//        htmlStr = htmlStr +
+//            "<tr><td class='arc'>" + "CAN4-SHA2" + "</td>" +
+//            "<td class='departure'>" + "广州" + "</td>" +
+//            "<td class='destination'>" + "昆山" + "</td>" +
+//            "<td class='cargoseType'>" + "Transfer" + "</td>" +
+//            "<td class='departureDate'>" + "2017-04-26" + "</td>" +
+//            "<td class='departureNum'>" + 3 + "</td>" +
+//            "<td class='destinationDate'>" + "2017-04-28" + "</td>" +
+//            "<td class='destinationNum'>" + 3 + "</td>" +
+//            "<td><a href='javascript:void(0)' class='StorageRate1'>" + "100%" + "</a></td></tr>";
+//
+//
+//        htmlStr = htmlStr +
+//            "<tr><td class='arc'>" + "CAN4-SHA2" + "</td>" +
+//            "<td class='departure'>" + "广州" + "</td>" +
+//            "<td class='destination'>" + "昆山" + "</td>" +
+//            "<td class='cargoseType'>" + "Transfer" + "</td>" +
+//            "<td class='departureDate'>" + "2017-04-27" + "</td>" +
+//            "<td class='departureNum'>" + 4 + "</td>" +
+//            "<td class='destinationDate'>" + "2017-04-29" + "</td>" +
+//            "<td class='destinationNum'>" + 2 + "</td>" +
+//            "<td><a href='javascript:void(0)' class='StorageRate1'>" + "50%" + "</a></td></tr>";
 
         tabTaskInfo.find('tbody').html("");
 

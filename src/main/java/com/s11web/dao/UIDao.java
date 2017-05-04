@@ -700,18 +700,14 @@ public class UIDao {
         try {
             Session session = sessionFactory.getCurrentSession();
             String str =
-                    "select  carrierAbbr,CONCAT(source,'-',destination) as Arc, source ," +
-                            " destination,cargoType,date_format(task.creDate,'%Y-%m-%d') as OutCreDate,  " +
-                            " count(item.scanId) as OutNum    from S11_task as task  " +
-                            " INNER JOIN S11_task_item as item on task.taskId = item.taskId   " +
-                            " where SUBSTR(task.laneE,1,locate(\"-\",task.laneE)-1)  = task.source" +
-                            " and cargoType = \"Transfer\"  " +
-                            " and carrierAbbr in :carrierSelected "+
+                    "select rate.carrierName,rate.arc,rate.sourceFC,rate.destinationFC,rate.cargoesType," +
+                            " rate.departureDate,rate.departureNum,rate.destinationDate,rate.destinationNum,rate.StorageRate  " +
+                            " from S11_Storage_Rate as rate  " +
+                            " where  rate.carrierName in :carrierSelected "+
                             (arcList.size() > 0 ?
-                                    (" and concat(source,'-',destination) in :arcList ") : "") +
-                            " and task.creDate >= :dateFrom" +
-                            " and task.creDate <= :dateTo" +
-                            " GROUP BY Arc,OutCreDate";
+                                    (" andrate.arc in :arcList ") : "") +
+                            " and rate.departureDate >= :dateFrom" +
+                            " and rate.departureDate <= :dateTo";
 
             Query query = session.createSQLQuery(str);
             query.setParameterList("carrierSelected", carrierSelected);
@@ -727,7 +723,35 @@ public class UIDao {
         return result;
     }
 
+    public List<String[]> getWarehousingItem(String carrier,
+                                             String cargoesType,
+                                             String arc,
+                                             String departureDate) {
 
+        List<String[]> result = new ArrayList<>();
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            String str =
+                    "SELECT item2.scanId,GROUP_CONCAT(item2.scanDatetime ORDER BY item2.scanDatetime)  from  S11_task_item as item2 where item2.scanId in ( " +
+                            "select item.scanId  from S11_task_item  as item INNER JOIN  S11_task as task  on task.taskId = item.taskId where  task.carrierAbbr = :carrier" +
+                            "  and date_format(task.creDate,'%Y-%m-%d') = :departureDate and CONCAT(task.source,'-',task.destination) = :arc and task.cargoType = :cargoesType)"+
+                            " GROUP BY item2.scanId";
+
+
+            Query query = session.createSQLQuery(str);
+
+            query.setParameter("carrier", carrier);
+            query.setParameter("cargoesType", cargoesType);
+            query.setParameter("arc", arc);
+            query.setParameter("departureDate", departureDate);
+
+            List<Object[]> list = query.list();
+            result = formatData(list, 3);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return result;
+    }
 
 
     public List<String[]> getLoadingRateOfChildren(String carrier,
@@ -765,23 +789,52 @@ public class UIDao {
     }
 
 
-    public List<String> getTaskIdbyOutOfFC(String carrier,
+    public List<String> getIntervalScanIdbyOutOfFC(String carrier,
                                            String arc,
-                                           String creDate ){
+                                           String FromDate,
+                                           String ToDate){
+        List<String> result = new ArrayList<>();
+        try {
+            log.debug(carrier + arc + FromDate  + ToDate);
+            Session session = sessionFactory.getCurrentSession();
+
+            String str =
+                    "select item.scanId from S11_task_item  as item " +
+                            " INNER JOIN  S11_task as task  on task.taskId = item.taskId " +
+                            " where  task.carrierAbbr = :carrier" +
+                            " and date_format(task.creDate,'%Y-%m-%d') >= :FromDate " +
+                            " and date_format(task.creDate,'%Y-%m-%d') <= :ToDate " +
+                            " and CONCAT(task.source,'-',task.destination) = :arc";
+
+            Query query = session.createSQLQuery(str);
+            query.setParameter("carrier", carrier);
+            query.setParameter("arc", arc);
+            query.setParameter("FromDate", FromDate);
+            query.setParameter("ToDate", ToDate);
+            List<Object> list = query.list();
+            for(Object item : list){
+                result.add(item.toString());
+            }
+        }catch (Exception e){
+            log.error(e);
+        }
+        return result;
+    }
+
+    public List<String> getScanIdbyOutOfFC(String carrier,
+                                                   String arc,
+                                                   String creDate ){
         List<String> result = new ArrayList<>();
         try {
             log.debug(carrier + arc + creDate);
             Session session = sessionFactory.getCurrentSession();
 
             String str =
-                    "select taskId from S11_task where taskId in (" +
-                            " select taskId  from S11_task_item  where  scanId in (" +
-                            " select item.scanId from S11_task_item as item where item.taskId in " +
-                            " (select task.taskId from S11_task as task where  task.carrierAbbr = :carrier" +
-                            " and date_format(task.creDate,'%Y-%m-%d') = :creDate and CONCAT(task.source,'-',task.destination) = :arc" +
-                            ")" +
-                            ")" +
-                            ") and scanType = 'in'";
+                    "select DISTINCT item.scanId from S11_task_item  as item " +
+                            " INNER JOIN  S11_task as task  on task.taskId = item.taskId " +
+                            " where  task.carrierAbbr = :carrier" +
+                            "  and date_format(task.creDate,'%Y-%m-%d') = :creDate " +
+                            " and CONCAT(task.source,'-',task.destination) = :arc";
 
             Query query = session.createSQLQuery(str);
             query.setParameter("carrier", carrier);
@@ -797,25 +850,75 @@ public class UIDao {
         return result;
     }
 
-    public String[] getScanIDbyTaskId(JSONArray taskId ){
-        String[] result = new  String[2];
+
+    public List<String> getTaskIdInOfFCbyScanId(JSONArray ScanId,
+                                                String creDate){
+        List<String> result = new ArrayList<>();
+        try {
+            log.debug(ScanId);
+            Session session = sessionFactory.getCurrentSession();
+
+            String str =
+                    "select DISTINCT task.taskId from S11_task as task  INNER JOIN S11_task_item as item" +
+                            " on task.taskId = item.taskId where item.scanId in :ScanId " +
+                            " and task.scanType = 'in'" +
+                            " and task.creDate > :creDate";
+
+            Query query = session.createSQLQuery(str);
+            query.setParameterList("ScanId", ScanId);
+            query.setParameter("creDate",creDate);
+            List<Object> list = query.list();
+            for(Object item : list){
+                result.add(item.toString());
+            }
+        }catch (Exception e){
+            log.error(e);
+        }
+        return result;
+    }
+
+
+    public  List<String> getScanIDbyTaskId(JSONArray taskId,
+                                           String creDate){
+        List<String> result = new ArrayList<>();
         try {
 
             Session session = sessionFactory.getCurrentSession();
 
             String str =
-                    "select DISTINCT count(scanId),DATE_FORMAT(item.scanDatetime,'%Y-%m-%d') from S11_task_item as item where taskId in :taskId";
+                    " select DISTINCT scanId from S11_task_item as item where taskId in :taskId" +
+                    " and scanDatetime> :creDate";
+
+            Query query = session.createSQLQuery(str);
+            query.setParameterList("taskId", taskId);
+            query.setParameter("creDate",creDate);
+
+            List<Object> list = query.list();
+            for(Object item : list){
+                result.add(item.toString());
+            }
+        }catch (Exception e){
+            log.error(e);
+        }
+        return result;
+    }
+
+
+    public  List<String> getDatebyTaskId(JSONArray taskId ){
+        List<String> result = new ArrayList<>();
+        try {
+
+            Session session = sessionFactory.getCurrentSession();
+
+            String str =
+                    "select  DATE_FORMAT(item.scanDatetime,'%Y-%m-%d') from S11_task_item as item where taskId in :taskId limit 1";
 
             Query query = session.createSQLQuery(str);
             query.setParameterList("taskId", taskId);
 
-            List<Object[]>list = query.list();
-            if(list==null||list.size()==0){
-                result[0] = "-";
-                result[1] = "0";
-            }else{
-                result[0] = list.get(0)[0].toString();
-                result[1] = list.get(0)[1].toString();
+            List<Object> list = query.list();
+            for(Object item : list){
+                result.add(item.toString());
             }
         }catch (Exception e){
             log.error(e);

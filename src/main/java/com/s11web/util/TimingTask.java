@@ -1,5 +1,7 @@
 package com.s11web.util;
+import com.s11web.model.StoreRate;
 import com.s11web.service.AuxiliaryService;
+import com.s11web.service.UIService;
 import com.squareup.okhttp.*;
 import net.sf.json.JSONObject;
 import org.apache.log4j.Logger;
@@ -11,9 +13,11 @@ import org.springframework.stereotype.Component;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 /**
  * Created by xietian
  * 2017/4/18.
@@ -36,6 +40,7 @@ public class TimingTask {
 
     @Autowired
     private AuxiliaryService auxiliaryService;
+
     /**
      * 更新task_item表，根据ScanID,获取箱型、体积、重量等信息。
      */
@@ -47,7 +52,7 @@ public class TimingTask {
         //获取当前日期
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String TDate = sdf.format(sdf.format(new Date(d.getTime() - (long)1 * 24 * 60 * 60 * 1000)));
+        String TDate = sdf.format(new Date(d.getTime() - (long)1 * 24 * 60 * 60 * 1000));
         log.debug("----------today is : " + TDate+"------------");
         //获取当天扫描所有的货物的ScanID
         List<String> ScanIDitems = auxiliaryService.getScanIDbyDate(TDate);
@@ -59,9 +64,6 @@ public class TimingTask {
                 auxiliaryService.uodateScanInfo(ScanIDitem,ScanInfo[0],ScanInfo[1],ScanInfo[2]);
             }
         }
-
-
-
     }
 
     public String[] getScanInfo(String Url,String ScanId){
@@ -121,5 +123,58 @@ public class TimingTask {
             throw new RuntimeException(e);
         }
         return res;
+    }
+
+
+
+
+    //获取入库率等信息
+
+
+    /**
+     * 更新扫描数据的入库率的表格。
+     */
+    // 每晚凌晨1点更新
+       @Scheduled(cron="0 4 *  * * ? ")
+    public void updateStoreRate(){
+
+        //更新十天内的数据
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String FromDate = sdf.format(new Date(d.getTime() - (long)10 * 24 * 60 * 60 * 1000));
+        String ToDate = sdf.format(new Date(d.getTime() - (long)1 * 24 * 60 * 60 * 1000));
+        log.debug("----------today is : " + FromDate+"----" + ToDate+"--------");
+
+        log.debug("getWareHousingByCondition is running " + new Date());
+        boolean flag;
+        String message;
+        List<String[]> res = auxiliaryService.getWareHousingByCondition(FromDate,ToDate);
+        log.debug("getWareHousingByCondition is finished");
+        if (Objects.nonNull(res)) {
+            if(res!=null&&res.size()>0){
+                NumberFormat fmt = NumberFormat.getPercentInstance();
+                fmt.setMaximumFractionDigits(2);//最多两位百分小数，如25.23%
+                for(String[]item : res){
+                    String[]temp = auxiliaryService.getWareHousingInfobyOutOfFC(item[0],item[1],item[5]);
+                    item[7] = temp[0];
+                    item[8] = temp[1];
+                    item[9] =  fmt.format(Double.parseDouble(item[8])/Double.parseDouble(item[6]));
+                    StoreRate storeRate = new StoreRate(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7],item[8],item[9]);
+                    auxiliaryService.updateStoreRate(storeRate);
+                }
+            }
+
+
+
+            flag = true;
+            message = "getWareHousingByCondition info success!";
+        } else {
+            flag = false;
+            message = "get count info error!";
+        }
+        log.debug(message);
+
+//        log.debug(res.get(0).toString());
+        log.debug("getWareHousingByCondition is completed ");
     }
 }

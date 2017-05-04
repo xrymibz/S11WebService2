@@ -18,7 +18,7 @@
         <br>
         <div class="panel panel-default">
             <div class="panel-heading" style = "text-align:left;font-size:16px">
-                <b>Task Items:  出库数量：4 ， 入库数量2 </b>
+                <b class ="statistics">Task Items:  出库数量： ， 入库数量： </b>
             </div>
         </div>
         <div style = "margin-left:90%">
@@ -51,18 +51,17 @@
     var btnDownLoadTaskDetail = $("#btnDownLoadTaskDetail");
 
     var formData = {};
-    formData.laneE = "${laneE}";
-    formData.arc = "${arcName}";
-    formData.cargoType = "${cargoType}";
-    formData.sortCode = "${sortCode}";
-    formData.operateDate = "${operateDate}";
-    formData.shipNumber = "${count}";
+    formData.carrierName = "${carrierName}";
+    formData.cargoesType = "${cargoesType}";
+    formData.arc = "${arc}";
+    formData.departureDate = "${departureDate}";
+    formData.destinationDate = "${destinationDate}";
     formData = $.toJSON(formData);
 
 
 
 
-    showTaskItem( getTaskItem(basePath, formData) );
+    showTaskItem( getWarehousingItem(basePath, formData) );
 
     btnDownLoadTaskDetail.click(function(){
         downloadFile(basePath + "downloadScanItemDetail", formData);
@@ -73,35 +72,41 @@
 
     function showTaskItem(data){
         var html = "";
-//        for (var i = 0; i < data.length; ++i){
-//            html += "<tr>" +
-//                "<td>" + data[i][1] + "</td>" +
-//                "<td>" + data[i][0] + "</td>" +
-//                "<td>" + data[i][2] + "</td>" +
-//                "</tr>";
-//        }
-
-
-                    html += "<tr>" +
-                "<td>" + "1" + "</td>" +
-                "<td>" + "2017-04-25 16:50:04" + "</td>" +
-                "<td>" + "2017-04-27 16:49:34" + "</td>" +
+        var num = 0;
+        for (var i = 0; i < data.length; ++i){
+            html += "<tr>" +
+                "<td>" + data[i][0] + "</td>" +
+                "<td>" + data[i][1] + "</td>" +
+                "<td>" + data[i][2] + "</td>" +
                 "</tr>";
-        html += "<tr>" +
-            "<td>" + "2" + "</td>" +
-            "<td>" + "2017-04-25 16:50:04" + "</td>" +
-            "<td>" + "2017-04-27 16:49:34" + "</td>" +
-            "</tr>";
-        html += "<tr>" +
-            "<td>" + "3" + "</td>" +
-            "<td>" + "2017-04-25 16:50:04" + "</td>" +
-            "<td>" + "-" + "</td>" +
-            "</tr>";
-        html += "<tr>" +
-            "<td>" + "4" + "</td>" +
-            "<td>" + "2017-04-25 16:50:04" + "</td>" +
-            "<td>" + "-" + "</td>" +
-            "</tr>";
+            if(data[i][2]!="-"){
+                num++;
+            }
+        }
+        var x = document.getElementsByClassName("statistics");
+        x[0].innerHTML = "出库数量 ： " +data.length + ",  入库数量 ：" + num  ;
+
+
+//                    html += "<tr>" +
+//                "<td>" + "1" + "</td>" +
+//                "<td>" + "2017-04-25 16:50:04" + "</td>" +
+//                "<td>" + "2017-04-27 16:49:34" + "</td>" +
+//                "</tr>";
+//        html += "<tr>" +
+//            "<td>" + "2" + "</td>" +
+//            "<td>" + "2017-04-25 16:50:04" + "</td>" +
+//            "<td>" + "2017-04-27 16:49:34" + "</td>" +
+//            "</tr>";
+//        html += "<tr>" +
+//            "<td>" + "3" + "</td>" +
+//            "<td>" + "2017-04-25 16:50:04" + "</td>" +
+//            "<td>" + "-" + "</td>" +
+//            "</tr>";
+//        html += "<tr>" +
+//            "<td>" + "4" + "</td>" +
+//            "<td>" + "2017-04-25 16:50:04" + "</td>" +
+//            "<td>" + "-" + "</td>" +
+//            "</tr>";
 
         tabTaskItem.find("tbody").html("");
         tabTaskItem.find("tbody").append(html);
@@ -129,5 +134,27 @@
             }
         });
     }
+
+
+    function getWarehousingItem(basePath, formData){
+        var resultData = [];
+        $.ajax({
+            type:"POST",
+            url:basePath + "/getWarehousingItem",
+            async : false,
+            timeout : 5000,
+            data : "data=" + formData,
+            dataType : "json",
+            success:function(data){
+                resultData = data.data;
+            },
+            error: function(XMLHttpRequest, textStatus) {
+                console.log("getTaskItem   " + XMLHttpRequest.status);
+            }
+        });
+
+        return resultData;
+    }
+
 </script>
 </html>

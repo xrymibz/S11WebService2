@@ -273,8 +273,12 @@
 
         formData = $.toJSON(formdata);
         console.log("formdata : " + formdata);
+        if(new Date(toDate.val())-new Date(fromDate.val())>1000*60*60*24*365){
+            alert("时间范围不得超过1年");
+        }else{
+            showTaskInfo(getLoadingRateByConditions(basePath, formData));
+        }
 
-        showTaskInfo(getLoadingRateByConditions(basePath, formData));
     });
 
     btnDownload.click(function () {
