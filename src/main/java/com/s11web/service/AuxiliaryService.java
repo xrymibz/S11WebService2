@@ -52,7 +52,7 @@ public class AuxiliaryService {
 
     public String[] getWareHousingInfobyOutOfFC(String carrier,String arc,String creDate){
         try {
-            String[]res = new String[2];
+            String[]res = new String[3];
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             //发货当天前后两天内的扫描记录
             log.debug("get interval date  :"  +creDate);
@@ -79,9 +79,10 @@ public class AuxiliaryService {
             }else{
                 List<String>InOfFCDate = auxiliaryDao.getDatebyTaskId(JSONArray.fromObject(taskId));
                 res[0] = InOfFCDate.get(0);
-                res[1] = InOfFCDate.size()+"";
                 //关掉查询漏件        res[1] = getNumByScanId(OutOfFCScanId,IntervalOutOfFCScanId,InOfFCScanId) +"";
-                res[1] = getNumByScanId(OutOfFCScanId,IntervalOutOfFCScanId,InOfFCScanId) +"";
+               String[]NumsAndGoods = getNumByScanId(OutOfFCScanId,IntervalOutOfFCScanId,InOfFCScanId);
+                res[1] = NumsAndGoods[0];
+                res[2] = NumsAndGoods[1];
             }
 
             return res;
@@ -95,14 +96,25 @@ public class AuxiliaryService {
         auxiliaryDao.updateStoreRate(storeRate);
     }
 
-    public int getNumByScanId(List<String>outFC,List<String>intervalOutFC,List<String>inFC){
+    public String[] getNumByScanId(List<String>outFC,List<String>intervalOutFC,List<String>inFC){
+        String []res = new String[2];
+        String missedGoods = "";
         int num = 0;
         for(String i:inFC){
-          if(outFC.contains(i)||!intervalOutFC.contains(i)){
+          if(outFC.contains(i)){
                 num++;
+            }else if (!intervalOutFC.contains(i)){
+                num++;
+              missedGoods +=","+i;
             }
         }
-        return num;
+        res[0] = num+"";
+        if(missedGoods.length()==0){
+            res[1] = "";
+        }else{
+            res[1] = missedGoods.substring(1,missedGoods.length());
+        }
+        return res;
     }
 
 }

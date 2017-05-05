@@ -216,7 +216,6 @@
 
     cargoList.multiselect(
         {
-
             includeSelectAllOption : true,
             enableFiltering : true,
             maxHeight : 150,
@@ -281,7 +280,7 @@
     });
 
     btnDownload.click(function(){
-        downloadFile(basePath + "downloadScanInfo", formData);
+        downloadFile(basePath + "downloadWarehousingInfo", formData);
     });
 
     tabTaskInfo.on("click",".StorageRate1",function(){
@@ -292,11 +291,14 @@
         var destinationDate = tr.find(".destinationDate").html();
         var cargoesType = tr.find(".cargoesType").html();
         var carrierName = tr.find(".carrierName").html();
+        var missedGoods = tr.find(".missedGoods").html();
+
 
         window.open(basePath + "warehousingItem?carrierName=" + carrierName + "&cargoesType=" + cargoesType
             + "&arc=" + arc
             + "&departureDate=" + departureDate
-            + "&destinationDate=" + destinationDate);
+            + "&destinationDate=" + destinationDate
+            + "&missedGoods=" + missedGoods);
 
     });
 
@@ -307,12 +309,14 @@
             "<th style='text-align:center'>Arc</th>\n" +
             "<th style='text-align:center'>出发库房</th>\n" +
             "<th style='text-align:center'>目的库房</th>\n" +
-            "<th style='text-align:center'>cargoseType</th>\n" +
+            "<th style='text-align:center'>cargoType</th>\n" +
             "<th style='text-align:center'>出库日期</th>\n" +
             "<th style='text-align:center'>出库数量</th>\n" +
             "<th style='text-align:center'>入库日期</th>\n" +
             "<th style='text-align:center'>入库数量</th>\n" +
-            "<th style='text-align:center'>入库率</th>\n</tr>"
+            "<th style='text-align:center'>入库率</th>\n" +
+            "<th style='text-align:center;display:none'>missedGoods</th>\n" +
+            "</tr>"
         );
         var total = 0;
         tabTaskInfo.find('tbody');
@@ -331,7 +335,9 @@
                 "<td class='departureNum'>" + data[i][6] + "</td>" +
                 "<td class='destinationDate'>" + data[i][7] + "</td>" +
                 "<td class='destinationNum'>" + data[i][8] + "</td>" +
-                "<td><a href='javascript:void(0)' class='StorageRate1'>" + data[i][9] + "</a></td></tr>";
+                "<td><a href='javascript:void(0)' class='StorageRate1'>" + data[i][9] + "</a></td>" +
+                "<td style='display:none' class='missedGoods'>" + data[i][10] + "</td>" +
+                "</tr>";
 
         }
 

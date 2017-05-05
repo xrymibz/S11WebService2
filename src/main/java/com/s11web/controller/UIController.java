@@ -300,21 +300,12 @@ public class UIController {
         }
         log.debug(message);
 
-        for(String[]item:res){
-            String[]Dates = item[1].split(",");
-            if(Dates==null||Dates.length==0){
-                item[1] = "-";
-                item[2] = "-";
-            }else if(Dates.length==1){
-                item[1] = Dates[0];
-                item[2] = "-";
-            }else{
-                item[1] = Dates[0];
-                item[2] = Dates[Dates.length-1];
-            }
-            log.debug(item[0] +  item[1] +  item[2]);
-        }
+
         log.debug("getWareHousingByCondition is completed ");
+
+        log.debug("check the missed goods is beginning");
+
+
         return new JsonResult<>(flag, message, res);
     }
 
@@ -366,13 +357,15 @@ public class UIController {
                                         @RequestParam("cargoesType") String cargoesType,
                                         @RequestParam("arc") String arc,
                                         @RequestParam("departureDate") String departureDate,
-                                        @RequestParam("destinationDate") String destinationDate) {
+                                        @RequestParam("destinationDate") String destinationDate,
+                                        @RequestParam("missedGoods") String missedGoods) {
         ModelAndView mav =  new ModelAndView("jsp/warehousingItem");
         mav.addObject("carrierName", carrierName);
         mav.addObject("cargoesType", cargoesType);
         mav.addObject("arc", DataOperation.decode(arc));
         mav.addObject("departureDate", DataOperation.decode(departureDate));
         mav.addObject("destinationDate", destinationDate);
+        mav.addObject("missedGoods", missedGoods);
         return  mav;
     }
 }

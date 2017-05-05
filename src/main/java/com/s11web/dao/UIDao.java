@@ -701,7 +701,7 @@ public class UIDao {
             Session session = sessionFactory.getCurrentSession();
             String str =
                     "select rate.carrierName,rate.arc,rate.sourceFC,rate.destinationFC,rate.cargoesType," +
-                            " rate.departureDate,rate.departureNum,rate.destinationDate,rate.destinationNum,rate.StorageRate  " +
+                            " rate.departureDate,rate.departureNum,rate.destinationDate,rate.destinationNum,rate.StorageRate ,rate.missedGoods " +
                             " from S11_Storage_Rate as rate  " +
                             " where  rate.carrierName in :carrierSelected "+
                             (arcList.size() > 0 ?
@@ -716,7 +716,7 @@ public class UIDao {
             query.setParameter("dateTo", dateTo);
 
             List<Object[]> list = query.list();
-            result = formatData(list, 10);
+            result = formatData(list, 11);
         } catch (Exception e) {
             log.error(e);
         }
@@ -746,6 +746,31 @@ public class UIDao {
             query.setParameter("departureDate", departureDate);
 
             List<Object[]> list = query.list();
+            result = formatData(list, 3);
+        } catch (Exception e) {
+            log.error(e);
+        }
+        return result;
+    }
+
+    public List<String[]> getScanTimedByScanId(JSONArray missedScanid) {
+
+        List<String[]> result = new ArrayList<>();
+        try {
+            Session session = sessionFactory.getCurrentSession();
+            String str =
+                    "select item.scanId, date_format(item.scanDatetime,'%Y-%m-%d %H:%i:%S') from S11_task_item as item where  item.scanId in :missedScanid";
+
+
+
+            Query query = session.createSQLQuery(str);
+            query.setParameterList("missedScanid", missedScanid);
+
+
+            List<Object[]> list = query.list();
+            for(Object[]i:list){
+                log.debug("what : +" + i[0]+i[1]);
+            }
             result = formatData(list, 3);
         } catch (Exception e) {
             log.error(e);

@@ -152,14 +152,45 @@ public class UIService {
             String cargoesType = data.getString("cargoesType");
             String arc = data.getString("arc");
             String departureDate = data.getString("departureDate");
+            String missedGoods = data.getString("missedGoods");
+            String[]missedScanId = missedGoods.split(",");
             log.debug("the carrier is :" + carrierName);
-            return uiDao.getWarehousingItem(carrierName, cargoesType, arc, departureDate);
+            List<String[]>scanIds = uiDao.getWarehousingItem(carrierName, cargoesType, arc, departureDate);
+
+            for(String[]item:scanIds){
+                String[]Dates = item[1].split(",");
+                if(Dates==null||Dates.length==0){
+                    item[1] = "-";
+                    item[2] = "-";
+                }else if(Dates.length==1){
+                    item[1] = Dates[0];
+                    item[2] = "-";
+                }else{
+                    item[1] = Dates[0];
+                    item[2] = Dates[Dates.length-1];
+                }
+                log.debug(item[0] +  item[1] +  item[2]);
+            }
+            if(missedScanId!=null&&missedScanId.length>0){
+                JSONArray JmissedScanid =  JSONArray.fromObject(missedScanId);
+                List<String[]>missedScanIds = uiDao.getScanTimedByScanId(JmissedScanid);
+                for(String[]item:missedScanIds){
+                    item[2] = item[1];
+                    item[1] = "-";
+                    log.debug(item[0] +  item[1] +  item[2]);
+                    scanIds.add(item);
+                }
+            }
+            return scanIds;
         } catch (Exception e) {
             log.info("error when get count", e);
 
             return null;
         }
     }
+
+
+
 
 
 
@@ -383,6 +414,63 @@ public class UIService {
 
         return (new ExcelOperator()).generateExcel(sheetEntityList);
     }
+
+
+    public XSSFWorkbook downloadWarehousingInfo(String inputJsonStr) {
+
+        String[] colNameList;
+
+        SheetEntity summarySheetInfo = new SheetEntity();
+        List<String[]> taskResult = getWareHousingByCondition(inputJsonStr);
+        colNameList = new String[]{
+                Constants.excelColumnName.CARRIER_NAME.val(),
+                Constants.excelColumnName.ARC_NAME.val(),
+                Constants.excelColumnName.depatureFC.val(),
+                Constants.excelColumnName.destinationFC.val(),
+                Constants.excelColumnName.CARGO_TYPE.val(),
+                Constants.excelColumnName.depatureDate.val(),
+                Constants.excelColumnName.depatureNum.val(),
+                Constants.excelColumnName.destinationDate.val(),
+                Constants.excelColumnName.destinationNum.val(),
+                Constants.excelColumnName.warehousingRate.val(),
+                Constants.excelColumnName.missedGoods.val()};
+        taskResult.add(0, colNameList);
+        summarySheetInfo.setSheetName("WarehousingInfo");
+        summarySheetInfo.setRowList(taskResult);
+
+
+
+        ArrayList<SheetEntity> sheetEntityList = new ArrayList<>();
+        sheetEntityList.add(summarySheetInfo);
+
+
+        return (new ExcelOperator()).generateExcel(sheetEntityList);
+    }
+
+    public XSSFWorkbook downloadWarehousingItemDetail(String inputJsonStr) {
+
+        String[] colNameList;
+
+        SheetEntity summarySheetInfo = new SheetEntity();
+        List<String[]> taskResult = getWarehousingItem(inputJsonStr);
+        colNameList = new String[]{
+                Constants.excelColumnName.SCAN_ID.val(),
+                Constants.excelColumnName.depatureDate.val(),
+                Constants.excelColumnName.destinationDate.val()};
+        taskResult.add(0, colNameList);
+        summarySheetInfo.setSheetName("WarehousingItemDetail");
+        summarySheetInfo.setRowList(taskResult);
+
+
+
+        ArrayList<SheetEntity> sheetEntityList = new ArrayList<>();
+        sheetEntityList.add(summarySheetInfo);
+
+
+        return (new ExcelOperator()).generateExcel(sheetEntityList);
+    }
+
+
 
     public XSSFWorkbook downloadLoadingRateInfo(String inputJsonStr) {
 

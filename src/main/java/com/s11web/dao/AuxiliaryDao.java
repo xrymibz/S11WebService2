@@ -96,7 +96,7 @@ public void uodateScanInfo(String ScanID,String PV,String PW, String Box){
             query.setParameter("dateTo", dateTo);
 
             List<Object[]> list = query.list();
-            result = formatData(list, 10);
+            result = formatData(list, 11);
         } catch (Exception e) {
             log.error(e);
         }

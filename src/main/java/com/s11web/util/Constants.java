@@ -21,7 +21,7 @@ public class Constants {
     public enum excelColumnName {
 
         LANE_NAME("laneName"),
-        ARC_NAME("arcName"),
+        ARC_NAME("arc"),
         CARGO_TYPE("cargoType"),
         SORT_CODE("sortCode"),
         SUM("总数"),
@@ -41,7 +41,15 @@ public class Constants {
         WATER_VOL("水方"),
         LOADING_RATE("装载率"),
         VOL("总体积"),
-        WEI("总重量");
+        WEI("总重量"),
+        depatureFC("出发库房"),
+        destinationFC("目的库房"),
+        depatureDate("出库日期"),
+        destinationDate("入库日期"),
+        depatureNum("出库数量"),
+        destinationNum("入库数量"),
+        warehousingRate("入库率"),
+        missedGoods("漏扫找回");
 
 
         private String nameString;

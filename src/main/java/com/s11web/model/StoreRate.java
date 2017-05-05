@@ -50,8 +50,10 @@ public class StoreRate {
     @Getter
     @Setter
     private String StorageRate;
-
-    public StoreRate(String carrierName, String arc, String sourceFC, String destinationFC, String cargoesType, String departureDate, String departureNum, String destinationDate, String destinationNum, String storageRate) {
+    @Getter
+    @Setter
+    private String missedGoods;
+    public StoreRate(String carrierName, String arc, String sourceFC, String destinationFC, String cargoesType, String departureDate, String departureNum, String destinationDate, String destinationNum, String storageRate,String missedGoods) {
         this.carrierName = carrierName;
         this.arc = arc;
         this.sourceFC = sourceFC;
@@ -63,6 +65,7 @@ public class StoreRate {
         this.destinationNum = destinationNum;
         this.StorageRate = storageRate;
         this.id = carrierName + arc + departureDate.toString();
+        this.missedGoods = missedGoods;
     }
 
 
@@ -153,5 +156,13 @@ public class StoreRate {
 
     public void setStorageRate(String storageRate) {
         StorageRate = storageRate;
+    }
+
+    public String getMissedGoods() {
+        return missedGoods;
+    }
+
+    public void setMissedGoods(String missedGoods) {
+        this.missedGoods = missedGoods;
     }
 }

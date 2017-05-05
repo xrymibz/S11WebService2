@@ -101,6 +101,46 @@ public class DownloadController {
             return new ModelAndView("jsp/errorPage");
         }
     }
+    @ResponseBody
+    @RequestMapping(value = "/downloadWarehousingInfo")
+    public ModelAndView downloadWarehousingInfo(@ModelAttribute(value = "data") String data,
+                                         HttpServletResponse response) {
+
+        try {
+            response.setContentType(Constants.mimeType.EXCEL.val());
+            response.setHeader("Content-Disposition",
+                    String.format("attachment; filename=downloadWarehousingInfo-%d.xlsx", new Date().getTime()));
+            XSSFWorkbook wb = uiService.downloadWarehousingInfo(data);
+            OutputStream os = response.getOutputStream();
+            wb.write(os);
+            log.debug("download scan information success!");
+
+            return null;
+        } catch (IOException e) {
+            log.error(e);
+            return new ModelAndView("jsp/errorPage");
+        }
+    }
+
+    @RequestMapping(value = "/downloadWarehousingItemDetail")
+    public ModelAndView downloadWarehousingItemDetail(@ModelAttribute(value = "data") String data,
+                                                HttpServletResponse response) {
+
+        try {
+            response.setContentType(Constants.mimeType.EXCEL.val());
+            response.setHeader("Content-Disposition",
+                    String.format("attachment; filename=downloadWarehousingItemDetail-%d.xlsx", new Date().getTime()));
+            XSSFWorkbook wb = uiService.downloadWarehousingItemDetail(data);
+            OutputStream os = response.getOutputStream();
+            wb.write(os);
+            log.debug("download scan information success!");
+
+            return null;
+        } catch (IOException e) {
+            log.error(e);
+            return new ModelAndView("jsp/errorPage");
+        }
+    }
 
     @ResponseBody
     @RequestMapping(value = "/downloadExceptionInfo")

@@ -56,6 +56,7 @@
     formData.arc = "${arc}";
     formData.departureDate = "${departureDate}";
     formData.destinationDate = "${destinationDate}";
+    formData.missedGoods = "${missedGoods}";
     formData = $.toJSON(formData);
 
 
@@ -64,7 +65,7 @@
     showTaskItem( getWarehousingItem(basePath, formData) );
 
     btnDownLoadTaskDetail.click(function(){
-        downloadFile(basePath + "downloadScanItemDetail", formData);
+        downloadFile(basePath + "downloadWarehousingItemDetail", formData);
     });
     $(".scanQuery").css("color", "white");
 
@@ -72,19 +73,23 @@
 
     function showTaskItem(data){
         var html = "";
-        var num = 0;
+        var outFC = 0;
+        var inFC = 0;
         for (var i = 0; i < data.length; ++i){
             html += "<tr>" +
                 "<td>" + data[i][0] + "</td>" +
                 "<td>" + data[i][1] + "</td>" +
                 "<td>" + data[i][2] + "</td>" +
                 "</tr>";
+            if(data[i][1]!="-"){
+                outFC++;
+            }
             if(data[i][2]!="-"){
-                num++;
+                inFC++;
             }
         }
         var x = document.getElementsByClassName("statistics");
-        x[0].innerHTML = "出库数量 ： " +data.length + ",  入库数量 ：" + num  ;
+        x[0].innerHTML = "出库数量 ： " +outFC+ ",  入库数量 ：" + inFC  ;
 
 
 //                    html += "<tr>" +

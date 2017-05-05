@@ -135,7 +135,7 @@ public class TimingTask {
      * 更新扫描数据的入库率的表格。
      */
     // 每晚凌晨1点更新
-       @Scheduled(cron="0 4 *  * * ? ")
+       @Scheduled(cron="0 53 *  * * ? ")
     public void updateStoreRate(){
 
         //更新十天内的数据
@@ -159,7 +159,8 @@ public class TimingTask {
                     item[7] = temp[0];
                     item[8] = temp[1];
                     item[9] =  fmt.format(Double.parseDouble(item[8])/Double.parseDouble(item[6]));
-                    StoreRate storeRate = new StoreRate(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7],item[8],item[9]);
+                    item[10] = temp[2];
+                    StoreRate storeRate = new StoreRate(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7],item[8],item[9],item[10]);
                     auxiliaryService.updateStoreRate(storeRate);
                 }
             }
