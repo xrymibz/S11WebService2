@@ -420,8 +420,8 @@
                 + "&exceptionType=" + exceptionType
                 + "&count=" + count
                 + "&operateDate=" + operateDate;
-            url=encodeURI(url);
-            url=encodeURI(url);
+//            url=encodeURI(url);
+//            url=encodeURI(url);
 			window.open(url);
 		});
 
