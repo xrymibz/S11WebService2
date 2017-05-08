@@ -102,7 +102,7 @@ public class InterfaceService {
         }else {
             s11_task.setScanType(s11TaskJson.getString("scanType"));
         }
-        if(s11TaskJson.getString("carType")!=null&&s11TaskJson.getString("carType").length()!=0){
+        if(s11TaskJson.get("carType")!=null&&s11TaskJson.getString("carType").length()!=0){
             s11_task.setCarType(s11TaskJson.getString("carType"));
             double WaterVol = getWaterVolbyCarType(s11TaskJson.getString("carType"));
 //            log.debug(WaterVol+"WaterVol");
@@ -110,6 +110,8 @@ public class InterfaceService {
         }
         if(s11TaskJson.get("carNumber")!=null){
             s11_task.setCarNumber(s11TaskJson.getString("carNumber"));
+        }else{
+            s11_task.setCarNumber("");
         }
         if (s11TaskJson.getString("cargoType").equals("VReturn"))
             s11_task.setSortCode(s11TaskJson.getString("sortCode"));

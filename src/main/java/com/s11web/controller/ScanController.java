@@ -135,16 +135,16 @@ public class ScanController {
 //            log.debug(result.get(0));
             log.debug(message);
             //数据压缩中文乱码。现在暂时先关掉
-            //  String compressData = ZipUtil.compress(JSONArray.fromObject(result).toString());
-            String compressData = JSONArray.fromObject(result).toString();
+            String compressData = ZipUtil.compress(JSONArray.fromObject(result).toString());
+//            String compressData = JSONArray.fromObject(result).toString();
             return new JsonResult<>(true, message, compressData);
-
+        }
 //        catch (IOException e) {
 //            message = "压缩数据出错!";
 //            log.error(message, e);
 //
 //            return new JsonResult<>(true, message, null);
-        } catch (Exception e) {
+         catch (Exception e) {
             message = "获取异常记录失败!";
             log.error(message, e);
 

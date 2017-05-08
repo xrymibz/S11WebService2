@@ -227,9 +227,16 @@ public class InterfaceController {
             return new JsonResult<>(false, message);
         }
 
-        String exceptionContent = request.getParameter("scanContent");
-        List<MultipartFile> images = request.getFiles("images");
-
+            String exceptionContent = request.getParameter("scanContent");
+            List<MultipartFile> images = request.getFiles("images");
+//        try {
+//            exceptionContent = ZipUtil.unCompress(exceptionContent);
+//        }catch (IOException e){
+//            message = "上传数据解析出错!";
+//            log.error(message, e);
+//
+//            return new JsonResult<>(false, message);
+//        }
         log.debug(images.size());
 
         List<String> fileUrlList = interfaceService.storeFilesToS3(bucketName, images);
