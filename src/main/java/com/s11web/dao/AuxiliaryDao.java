@@ -118,6 +118,7 @@ public void uodateScanInfo(String ScanID,String PV,String PW, String Box){
                             " where  task.carrierAbbr = :carrier" +
                             "  and date_format(task.creDate,'%Y-%m-%d') = :creDate " +
                             " and CONCAT(task.source,'-',task.destination) = :arc" +
+                            " and task.cargoType = 'Transfer'" +
                             " and task.scanType = 'out'";
 
             Query query = session.createSQLQuery(str);

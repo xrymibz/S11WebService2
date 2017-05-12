@@ -135,7 +135,7 @@ public class TimingTask {
      * 更新扫描数据的入库率的表格。
      */
     // 每晚凌晨1点更新
-       @Scheduled(cron="0 53 *  * * ? ")
+       @Scheduled(cron="0 39 *  * * ? ")
     public void updateStoreRate(){
 
         //更新十天内的数据

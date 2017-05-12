@@ -21,8 +21,8 @@ public class Md5Util {
 
     public boolean authentication(String sign, String methodStr) {
         log.info(getMD5Str(appSecretTrue + appKeyTrue + methodStr).toUpperCase());
-     //   return sign.equals(getMD5Str(appSecretTrue + appKeyTrue + methodStr).toUpperCase());
-        return true ;
+        return sign.equals(getMD5Str(appSecretTrue + appKeyTrue + methodStr).toUpperCase());
+//        return true ;
     }
 
     private String getMD5Str(String str) {

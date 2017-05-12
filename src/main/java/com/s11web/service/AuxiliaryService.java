@@ -76,6 +76,7 @@ public class AuxiliaryService {
             {
                 res[0] = "-";
                 res[1] = "0";
+                res[2] = "";
             }else{
                 List<String>InOfFCDate = auxiliaryDao.getDatebyTaskId(JSONArray.fromObject(taskId));
                 res[0] = InOfFCDate.get(0);

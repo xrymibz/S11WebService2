@@ -18,7 +18,8 @@ public class CarrierUserDao {
 
     public Object[] carrierUserLogin(String carrierName, String userName, String password) {
         try {
-            String sql = "select user.userId,c.carrierId,user.isInjection from zhw_carrier_user user,zhw_carrier c " +
+            String sql = "select user.userId,c.carrierId,user.isInjection from zhw_carrier_user user," +
+                    " c " +
                     "where user.carrierId=c.id and c.carrierName= :carrierName and user.username= :userName and user.password= :password";
             Query query = sessionFactory.getCurrentSession().createSQLQuery(sql);
             query.setParameter("carrierName", carrierName);

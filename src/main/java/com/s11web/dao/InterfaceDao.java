@@ -70,7 +70,7 @@ public class InterfaceDao {
         query.setParameter("leftTime", leftTime);
         query.setParameter("rightTime", rightTime);
         query.setParameter("scanType", scanType);
-        log.info(String.format("%s	%s	%s	%s	%s	%s", LaneE, sourceFc, destinationFc, arcType, leftTime, rightTime));
+        log.info(String.format("%s	%s	%s	%s	%s	%s %s", LaneE, sourceFc, destinationFc, arcType, leftTime, rightTime,scanType));
 
         HashSet<String> result = new HashSet<>();
         result.addAll(query.list());

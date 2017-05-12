@@ -29,8 +29,8 @@
                 <thead>
                 <tr>
                     <th style='text-align:center'>Scan ID</th>
-                    <th style='text-align:center'>入库时间</th>
                     <th style='text-align:center'>出库时间</th>
+                    <th style='text-align:center'>入库时间</th>
                 </tr>
                 </thead>
                 <tbody></tbody>

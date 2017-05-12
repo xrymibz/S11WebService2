@@ -152,39 +152,7 @@ public class ScanController {
         }
     }
 
-    @RequestMapping(value = "/getLanesByCarrier")
-    @ResponseBody
-    public JsonResult getLanesByCarrier(HttpServletRequest request) {
-        String message = null;
-        boolean flag = false;
-        message = "start getting lanes by carrierId";
-        System.out.println(message);
-        String carrierId = request.getParameter("carrierId");
-        String isInjection = request.getParameter("isInjection");
-        System.out.println(carrierId);
-        if (carrierId != null) {
-            List<Object[]> lanesList = uiService.getLanesByCarrier(carrierId, isInjection);
-            List<JSONObject> result = new ArrayList<JSONObject>();
 
-            for (Object[] laneInfo : lanesList) {
-                int laneId = (Integer) laneInfo[0];
-                String laneE = (String) laneInfo[1];
-                String laneName = (String) laneInfo[2];
-                String arcType = (String) laneInfo[3];
-                String item = "{'laneId':" + laneId + ",'laneE':'" + laneE + "','laneName':'" + laneName + "','arcType':'" + arcType + "'}";
-                //System.out.println(item);
-                JSONObject item2 = JSONObject.fromObject(item);
-                result.add(item2);
-
-            }
-            message = "success getting lanes";
-            flag = true;
-            return new JsonResult<List<JSONObject>>(flag, message, result);
-        } else {
-            message = "the param is error";
-            return new JsonResult<Integer>(flag, message, 0);
-        }
-    }
 
     @RequestMapping(value = "/getcartypeBycarrier")
     @ResponseBody
