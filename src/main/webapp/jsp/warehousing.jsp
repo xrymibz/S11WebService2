@@ -273,7 +273,8 @@
         console.log("formdata : " + formdata);
 
         if(new Date(toDate.val())-new Date(fromDate.val())>1000*60*60*24*93){
-            alert("时间范围不得超过三个月");
+  //          alert("时间范围不得超过三个月");
+            showTaskInfo(getWareHousing(basePath, formData));
         }else {
             showTaskInfo(getWareHousing(basePath, formData));
         }
