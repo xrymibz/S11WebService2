@@ -135,14 +135,14 @@ public class TimingTask {
      * 更新扫描数据的入库率的表格。
      */
     // 每晚凌晨1点更新
-       @Scheduled(cron="0 0 1  * * ? ")
+       @Scheduled(cron="0 53 *  * * ? ")
     public void updateStoreRate(){
 
         //更新十天内的数据
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String FromDate = sdf.format(new Date(d.getTime() - (long)10 * 24 * 60 * 60 * 1000));
-        String ToDate = sdf.format(new Date(d.getTime() - (long)1 * 24 * 60 * 60 * 1000));
+        String ToDate = sdf.format(new Date(d.getTime() ));
         log.debug("----------today is : " + FromDate+"----" + ToDate+"--------");
 
         log.debug("getWareHousingByCondition is running " + new Date());
