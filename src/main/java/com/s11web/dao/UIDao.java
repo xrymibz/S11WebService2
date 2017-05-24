@@ -734,7 +734,7 @@ public class UIDao {
             String str =
                     "SELECT item2.scanId,GROUP_CONCAT(item2.scanDatetime ORDER BY item2.scanDatetime)  from  S11_task_item as item2 where item2.scanId in ( " +
                             "select item.scanId  from S11_task_item  as item INNER JOIN  S11_task as task  on task.taskId = item.taskId where  task.carrierAbbr = :carrier" +
-                            "  and date_format(task.creDate,'%Y-%m-%d') = :departureDate and CONCAT(task.source,'-',task.destination) = :arc and task.cargoType = :cargoesType)"+
+                            "  and date_format(task.creDate,'%Y-%m-%d') = :departureDate and CONCAT(task.source,'-',task.destination) = :arc and task.cargoType = :cargoesType and task.scanType='out')"+
                             " and date_format(item2.scanDatetime\n,'%Y-%m-%d') >= :departureDate" +
                             " GROUP BY item2.scanId";
 
