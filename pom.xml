@@ -459,10 +459,11 @@
 			<artifactId>commons-logging</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.16</version>
+			<version>1.2.17</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -489,11 +490,15 @@
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.sf.jacob-project/jacob -->
 		<dependency>
-			<groupId>com.jacob</groupId>
+			<groupId>net.sf.jacob-project</groupId>
 			<artifactId>jacob</artifactId>
-			<version>1.17</version>
+			<version>1.14.3</version>
 		</dependency>
+
+
+
 		<dependency>
 			<groupId>org.apache.axis</groupId>
 			<artifactId>axis</artifactId>
@@ -517,14 +522,16 @@
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.8</version>
+			<version>3.9</version>
 		</dependency>
+		<!--json-lib-->
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
 			<version>2.4</version>
 			<classifier>jdk15</classifier>
 		</dependency>
+
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk</artifactId>
@@ -546,6 +553,9 @@
 			<artifactId>javax.mail-api</artifactId>
 			<version>1.4.7</version>
 		</dependency>
+
+
+
 
 	</dependencies>
 	<build>
